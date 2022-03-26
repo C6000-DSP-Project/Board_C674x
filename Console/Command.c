@@ -55,9 +55,21 @@ int Cmd_LED(int argc, char *argv[])
     	LED_Status = 0;
     }
 
-    int LED;
-    sscanf(argv[1], "%d", &LED);
-    LEDControl(LED, LED_Status);
+    int led, LEGGPIO;
+    sscanf(argv[1], "%d", &led);
+
+    switch(led)
+    {
+        case 0: LEGGPIO = SOM_LED2; break;
+        case 1: LEGGPIO = SOM_LED3; break;
+        case 2: LEGGPIO = EVM_LED3; break;
+        case 3: LEGGPIO = EVM_LED4; break;
+
+        default:
+            LEGGPIO = SOM_LED2;
+    }
+
+    LEDControl(LEGGPIO, LED_Status);
 
     return 0;
 }
@@ -152,6 +164,24 @@ int Cmd_SATA(int argc, char *argv[])
     return 0;
 }
 
+int Cmd_Buzzer(int argc, char *argv[])
+{
+    ConsoleWrite("Beep...\n");
+
+    if((!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help")))
+    {
+
+    }
+    else
+    {
+        int t;
+        sscanf(argv[1], "%d", &t);
+        BUZZERBeep(t);
+    }
+
+    return 0;
+}
+
 /****************************************************************************/
 /*                                                                          */
 /*              时间服务                                                    */
@@ -218,6 +248,9 @@ int Cmd_RTC(int argc, char *argv[])
         RTCTime.tm_wday = (d + 2 * m + 3 * (m + 1) / 5 + y + y / 4 - y / 100 + y / 400 + 1) % 7;
 
         RTCSet();
+
+        RTCTime.tm_year -= 1900;
+        RTCTime.tm_mon -= 1;
     }
 
     ConsoleWrite("%s\n", asctime(&RTCTime));
@@ -240,6 +273,8 @@ tCmdLineEntry g_sCmdTable[] =
     {"sata",         Cmd_SATA,       "\t\t - SATA Test  [sata]"},
 
     {"pru",          Cmd_PRULoad,    "\t\t - Load PRU program.[pruled]"},
+
+    {"buzzer",       Cmd_Buzzer,     "\t\t - Beep a while."},
 
     {"date",         Cmd_Date,       "\t\t - Get/Set System Date or Time."},
     {"hwclock",      Cmd_RTC,        "\t\t - Get/Set RTC Date or Time."},

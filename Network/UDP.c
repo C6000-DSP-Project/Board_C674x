@@ -94,6 +94,8 @@ void NetCloseHook()
     DaemonFree(hUdp);
 }
 
+char StrIP[16];
+
 void NetGetIPAddr(IPN IPAddr, unsigned int IfIdx, unsigned int fAdd)
 {
     if(fAdd)
@@ -105,7 +107,6 @@ void NetGetIPAddr(IPN IPAddr, unsigned int IfIdx, unsigned int fAdd)
         UARTprintf("Network Removed: ", IfIdx);
     }
 
-    char StrIP[16];
     NtIPN2Str(IPAddr, StrIP);
     UARTprintf("%s\r\n", StrIP);
 }

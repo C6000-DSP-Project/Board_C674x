@@ -22,7 +22,7 @@
  */
 #include <App.h>
 
-#include "Image.h"
+#include <LCD/Logo.h>
 
 /****************************************************************************/
 /*                                                                          */
@@ -190,13 +190,37 @@ Void LCDTask(UArg a0, UArg a1)
     // 显示静态文本
     GrContextFontSet(&g_sContext, TEXT_FONT);
     GrContextForegroundSet(&g_sContext, ClrSteelBlue);
-    GrStringDraw(&g_sContext, "I Love C6748", -1, 50, 50, false);
+    GrStringDraw(&g_sContext, "corekernel.net/.org/.cn", -1, 550, 400, false);
+    GrStringDraw(&g_sContext, "fpga.net.cn", -1, 550, 425, false);
 
     // 打开背光
     LCDBacklightEnable();
 
+    // 设置文字背景
+    GrContextBackgroundSet(&g_sContext, ClrWhite);
+    char str[64];
+
     for(;;)
     {
+//        RasterDisable(SOC_LCDC_0_REGS);
+//        RasterEnable(SOC_LCDC_0_REGS);
+
+        // 显示时间
+        sprintf(str, "%04d/%02d/%02d %02d:%02d:%02d", RTCTime.tm_year, RTCTime.tm_mon, RTCTime.tm_mday,
+                                                         RTCTime.tm_hour, RTCTime.tm_min, RTCTime.tm_sec);
+        GrStringDraw(&g_sContext, str, -1, 550, 25, true);
+
+        // MAC/IP 地址
+        sprintf(str, "%02X-%02X-%02X-%02X-%02X-%02X", MacAddr[0], MacAddr[1], MacAddr[2], MacAddr[3], MacAddr[4], MacAddr[5]);
+        GrStringDraw(&g_sContext, str, -1, 25, 375, true);
+
+        sprintf(str, "%s", StrIP);
+        GrStringDraw(&g_sContext, str, -1, 25, 400, true);
+
+        // 显示 CPU 负载
+        sprintf(str, "CPU Load %2d%%", Load_getCPULoad());
+        GrStringDraw(&g_sContext, str, -1, 25, 425, true);
+
         Task_sleep(1000);
     }
 }

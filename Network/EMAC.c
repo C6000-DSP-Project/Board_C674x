@@ -188,5 +188,5 @@ void EMAC_setConfig(unsigned char *pMacAddr)
 // 这个函数被 NSP 驱动调用 请勿修改函数名
 void EMAC_linkStatus(unsigned int phy, unsigned int linkStatus)
 {
-    UARTprintf("Link Status: %s on PHY %d\n", LinkStr[linkStatus],phy);
+    UARTprintf("Link Status: %s on PHY %d\n", LinkStr[linkStatus], phy);
 }

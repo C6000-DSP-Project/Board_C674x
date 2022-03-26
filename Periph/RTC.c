@@ -35,21 +35,36 @@ extern unsigned char LEDNixieVal[4];
 
 /****************************************************************************/
 /*                                                                          */
+/*              BCD/十进制数转换                                            */
+/*                                                                          */
+/****************************************************************************/
+int bcd2dec(int bcd)
+{
+    return (bcd - (bcd >> 4) * 6);
+}
+
+int dec2bcd(int dec)
+{
+    return (dec + (dec / 10) * 6);
+}
+
+/****************************************************************************/
+/*                                                                          */
 /*              设置日期/时间                                               */
 /*                                                                          */
 /****************************************************************************/
 void RTCSet()
 {
     // 设置日期
-    RTCYearSet(SOC_RTC_0_REGS, RTCTime.tm_year);
-    RTCMonthSet(SOC_RTC_0_REGS, RTCTime.tm_mon);
-    RTCDayOfMonthSet(SOC_RTC_0_REGS, RTCTime.tm_mday);
+    RTCYearSet(SOC_RTC_0_REGS, dec2bcd(RTCTime.tm_year));
+    RTCMonthSet(SOC_RTC_0_REGS, dec2bcd(RTCTime.tm_mon));
+    RTCDayOfMonthSet(SOC_RTC_0_REGS, dec2bcd(RTCTime.tm_mday));
     RTCDayOfTheWeekSet(SOC_RTC_0_REGS, RTCTime.tm_wday);   // 星期
 
     // 设置时间
-    RTCHourSet(SOC_RTC_0_REGS, RTCTime.tm_hour);
-    RTCMinuteSet(SOC_RTC_0_REGS, RTCTime.tm_min);
-    RTCSecondSet(SOC_RTC_0_REGS, RTCTime.tm_sec);
+    RTCHourSet(SOC_RTC_0_REGS, dec2bcd(RTCTime.tm_hour));
+    RTCMinuteSet(SOC_RTC_0_REGS, dec2bcd(RTCTime.tm_min));
+    RTCSecondSet(SOC_RTC_0_REGS, dec2bcd(RTCTime.tm_sec));
 }
 
 /****************************************************************************/
@@ -60,24 +75,29 @@ void RTCSet()
 Void RTCHwi(UArg arg)
 {
     // 获取日期
-    RTCTime.tm_year = RTCYearGet(SOC_RTC_0_REGS);
-    RTCTime.tm_mon = RTCMonthGet(SOC_RTC_0_REGS);
-    RTCTime.tm_mday = RTCDayOfMonthGet(SOC_RTC_0_REGS);
+    RTCTime.tm_year = bcd2dec(RTCYearGet(SOC_RTC_0_REGS));
+    RTCTime.tm_mon = bcd2dec(RTCMonthGet(SOC_RTC_0_REGS));
+    RTCTime.tm_mday = bcd2dec(RTCDayOfMonthGet(SOC_RTC_0_REGS));
     RTCTime.tm_wday = RTCDayOfTheWeekGet(SOC_RTC_0_REGS);  // 星期
 
     // 获取时间
-    RTCTime.tm_hour = RTCHourGet(SOC_RTC_0_REGS);
-    RTCTime.tm_min = RTCMinuteGet(SOC_RTC_0_REGS);
-    RTCTime.tm_sec = RTCSecondGet(SOC_RTC_0_REGS);
+    unsigned short hour, min, sec;
+    hour = RTCHourGet(SOC_RTC_0_REGS);
+    min = RTCMinuteGet(SOC_RTC_0_REGS);
+    sec = RTCSecondGet(SOC_RTC_0_REGS);
+
+    RTCTime.tm_hour = bcd2dec(hour);
+    RTCTime.tm_min = bcd2dec(min);
+    RTCTime.tm_sec = bcd2dec(sec);
 
     // 数码管显示时间
-    LEDNixieVal[0] = (RTCTime.tm_min >> 4) & 0x0F;
-    LEDNixieVal[1] = (RTCTime.tm_min) & 0x0F;
+    LEDNixieVal[0] = (hour >> 4) & 0x0F;
+    LEDNixieVal[1] = hour & 0x0F;
 
-    LEDNixieVal[2] = (RTCTime.tm_sec >> 4) & 0x0F;
-    LEDNixieVal[3] = (RTCTime.tm_sec) & 0x0F;
+    LEDNixieVal[2] = (min >> 4) & 0x0F;
+    LEDNixieVal[3] = min & 0x0F;
 
-    if((LEDNixieVal[2] == 5) && (LEDNixieVal[3] == 9))
+    if((LEDNixieVal[0] == 5) && (LEDNixieVal[1] == 9) && (LEDNixieVal[2] == 5) && (LEDNixieVal[3] == 9))
     {
         BUZZERBeep(0xFFFFFF);
     }
