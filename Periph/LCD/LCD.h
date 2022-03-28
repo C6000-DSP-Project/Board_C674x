@@ -34,7 +34,7 @@
 #define BUFFER_METER_WIDTH      150
 
 // LCD  ±÷”
-#define LCD_CLK                 228000000
+#define LCD_CLK                 pllcfg.PLL0_SYSCLK2 * 1000000
 
 #define PALETTE_SIZE            32
 

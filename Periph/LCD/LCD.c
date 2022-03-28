@@ -151,7 +151,7 @@ Void LCDHwi(UArg arg)
     unsigned int  status;
 
     status = RasterIntStatus(SOC_LCDC_0_REGS,  RASTER_FIFO_UNDERFLOW_INT_STAT |
-                                               RASTER_END_OF_FRAME0_INT_STAT |
+                                               RASTER_END_OF_FRAME0_INT_STAT  |
                                                RASTER_END_OF_FRAME1_INT_STAT );
 
     if(status & RASTER_FIFO_UNDERFLOW_INT_STAT)
@@ -189,35 +189,91 @@ Void LCDTask(UArg a0, UArg a1)
 
     // 显示静态文本
     GrContextFontSet(&g_sContext, TEXT_FONT);
-    GrContextForegroundSet(&g_sContext, ClrSteelBlue);
-    GrStringDraw(&g_sContext, "corekernel.net/.org/.cn", -1, 550, 400, false);
-    GrStringDraw(&g_sContext, "fpga.net.cn", -1, 550, 425, false);
+    GrContextForegroundSet(&g_sContext, ClrWhite);
+    GrStringDraw(&g_sContext, "corekernel.net/.org/.cn", -1, 525, 400, false);
+    GrStringDraw(&g_sContext, "fpga.net.cn", -1, 525, 425, false);
 
     // 打开背光
     LCDBacklightEnable();
 
     // 设置文字背景
     GrContextBackgroundSet(&g_sContext, ClrWhite);
+
     char str[64];
+
+    char *WeekDayStr[64] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+
+    float t, rh;
+    char deg[] = {0xA1, 0xE3, 0};
 
     for(;;)
     {
-//        RasterDisable(SOC_LCDC_0_REGS);
-//        RasterEnable(SOC_LCDC_0_REGS);
+        // 背景图
+//      GrImageDraw(&g_sContext, image, 0, 0);
 
         // 显示时间
-        sprintf(str, "%04d/%02d/%02d %02d:%02d:%02d", RTCTime.tm_year, RTCTime.tm_mon, RTCTime.tm_mday,
-                                                         RTCTime.tm_hour, RTCTime.tm_min, RTCTime.tm_sec);
-        GrStringDraw(&g_sContext, str, -1, 550, 25, true);
+        GrContextForegroundSet(&g_sContext, ClrSteelBlue);
+
+        sprintf(str, "%04d/%02d/%02d %s %02d:%02d:%02d", RTCTime.tm_year + 1920, RTCTime.tm_mon, RTCTime.tm_mday, WeekDayStr[RTCTime.tm_wday],
+                                                          RTCTime.tm_hour, RTCTime.tm_min, RTCTime.tm_sec);
+        GrStringDraw(&g_sContext, str, -1, 525, 25, true);
+
+        // 触摸信息
+        GrContextForegroundSet(&g_sContext, ClrSteelBlue);
+        sprintf(str, "%d Point Touch", TouchInfo.Num);
+        GrStringDraw(&g_sContext, str, -1, 525, 50, true);
+
+        sprintf(str, "X0 %3d Y0 %3d", TouchInfo.X[0], TouchInfo.Y[0]);
+        GrStringDraw(&g_sContext, str, -1, 525, 75, true);
+
+        sprintf(str, "X1 %3d Y1 %3d", TouchInfo.X[1], TouchInfo.Y[1]);
+        GrStringDraw(&g_sContext, str, -1, 525, 100, true);
+
+        sprintf(str, "X2 %3d Y2 %3d", TouchInfo.X[2], TouchInfo.Y[2]);
+        GrStringDraw(&g_sContext, str, -1, 525, 125, true);
+
+        sprintf(str, "X3 %3d Y3 %3d", TouchInfo.X[3], TouchInfo.Y[3]);
+        GrStringDraw(&g_sContext, str, -1, 525, 150, true);
+
+        sprintf(str, "X4 %3d Y4 %3d", TouchInfo.X[4], TouchInfo.Y[4]);
+        GrStringDraw(&g_sContext, str, -1, 525, 175, true);
+
+        // 温度/湿度
+        TempSensorGet(&t, &rh);
+        sprintf(str, "Temperature %2.2f%sC", t, deg);
+        GrStringDraw(&g_sContext, str, -1, 25, 175, true);
+
+        sprintf(str, "Humidity %2.2f%%", rh);
+        GrStringDraw(&g_sContext, str, -1, 25, 200, true);
+
+        // CPU 频率
+        GrContextForegroundSet(&g_sContext, ClrBlack);
+
+        PLLClockGet();
+
+        sprintf(str, "DSP/ARM %dMHz", pllcfg.PLL0_SYSCLK1);
+        GrStringDraw(&g_sContext, str, -1, 25, 250, false);
+
+        sprintf(str, "DDR2 %dMT/s", pllcfg.PLL1_SYSCLK1);
+        GrStringDraw(&g_sContext, str, -1, 25, 275, false);
+
+        // 启动模式
+        BootModeGet();
+        sprintf(str, "Boot From %s", BootModeStr[BootMode]);
+        GrStringDraw(&g_sContext, str, -1, 25, 300, false);
 
         // MAC/IP 地址
+        GrContextForegroundSet(&g_sContext, ClrSteelBlue);
+
         sprintf(str, "%02X-%02X-%02X-%02X-%02X-%02X", MacAddr[0], MacAddr[1], MacAddr[2], MacAddr[3], MacAddr[4], MacAddr[5]);
-        GrStringDraw(&g_sContext, str, -1, 25, 375, true);
+        GrStringDraw(&g_sContext, str, -1, 25, 350, true);
 
         sprintf(str, "%s", StrIP);
-        GrStringDraw(&g_sContext, str, -1, 25, 400, true);
+        GrStringDraw(&g_sContext, str, -1, 25, 375, true);
 
         // 显示 CPU 负载
+        GrContextForegroundSet(&g_sContext, ClrSteelBlue);
+
         sprintf(str, "CPU Load %2d%%", Load_getCPULoad());
         GrStringDraw(&g_sContext, str, -1, 25, 425, true);
 

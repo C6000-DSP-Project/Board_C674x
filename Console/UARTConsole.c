@@ -22,10 +22,7 @@
 /*              宏定义                                                      */
 /*                                                                          */
 /****************************************************************************/
-// CPU 时钟频率定义
-#define SYSCLK_1_FREQ  (456000000)
-#define SYSCLK_2_FREQ  (SYSCLK_1_FREQ / 2)
-#define UART_FREQ      (SYSCLK_2_FREQ)
+#define UART_FREQ       pllcfg.PLL0_SYSCLK2 * 1000000
 
 #define UARTConsole     SOC_UART_2_REGS
 

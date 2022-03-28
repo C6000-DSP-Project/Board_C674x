@@ -9,8 +9,6 @@
 
 #include <VPIF/OV2640.h>
 
-static void Delay(volatile unsigned int delay);
-
 void write_SCCB(unsigned char Reg, unsigned char Data)
 {
 	I2CRegWrite(SOC_I2C_0_REGS, Reg, Data);
@@ -318,15 +316,4 @@ void TL2640_BrightnessConfig(unsigned char Brightness)
 	I2CRegWrite(SOC_I2C_0_REGS,0x7c, 0x09);
 	I2CRegWrite(SOC_I2C_0_REGS,0x7d, Brightness);
 	I2CRegWrite(SOC_I2C_0_REGS,0x7d, 0x00);
-}
-
-/****************************************************************************/
-/*                                                                          */
-/*              指令时钟方法延时				                            */
-/*                                                                          */
-/*   delay   -- 循环次数 	        	                                    */
-/****************************************************************************/
-static void Delay(volatile unsigned int delay)
-{
-    while(delay--);
 }

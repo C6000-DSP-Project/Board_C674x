@@ -106,13 +106,6 @@ void EEPROMTest(void)
 	    ConsoleWrite("Verify failed.\r\n\r\n");
 }
 
-// 指令延时（非精确）
-static Void Delay(UInt n)
-{
-	UInt i;
-
-	for(i = n; i > 0; i--);
-}
 /****************************************************************************/
 /*                                                                          */
 /*              EEPROM 写一个字节到指定地址                                 */

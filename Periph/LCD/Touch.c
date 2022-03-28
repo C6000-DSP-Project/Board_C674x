@@ -1,10 +1,25 @@
 /****************************************************************************/
 /*                                                                          */
-/*              LCD 触摸屏                                                  */
+/*    新核科技(广州)有限公司                                                */
 /*                                                                          */
-/*              2014年07月29日                                              */
+/*    Copyright (C) 2022 CoreKernel Technology (Guangzhou) Co., Ltd         */
 /*                                                                          */
 /****************************************************************************/
+/****************************************************************************/
+/*                                                                          */
+/*    LCD 触摸屏                                                            */
+/*                                                                          */
+/*    2022年03月27日                                                        */
+/*                                                                          */
+/****************************************************************************/
+/*
+ *    - 希望缄默(bin wang)
+ *    - bin@corekernel.net
+ *
+ *    官网 corekernel.net/.org/.cn
+ *    社区 fpga.net.cn
+ *
+ */
 #include <App.h>
 
 /****************************************************************************/
@@ -12,54 +27,118 @@
 /*              宏定义                                                      */
 /*                                                                          */
 /****************************************************************************/
-#define PINMUX5_GPIO2_12_ENABLE    (SYSCFG_PINMUX5_PINMUX5_15_12_GPIO2_12 << \
-								    SYSCFG_PINMUX5_PINMUX5_15_12_SHIFT)
+// GPIO 引脚
+#define TouchResetPin          98
+#define TouchIntPin            139
 
-#define SIMO_SOMI_CLK_CS1          0x00000E02
+// I2C 设备地址
+#define ADDRESS                0x5D
 
-#define DEFAULT_XSCALE             (0.5096)
-#define DEFAULT_YSCALE             (0.260162)
+// 触控芯片寄存器
+#define GT9XX_CFG_VER          0x8047     // 配置版本
+#define GT9XX_PRODUCT_ID       0x8140     // 产品 ID 寄存器 0x8140(LSB) 0x8141 0x8142 0x8143(MSB)
+#define GT9XX_C00RDINATE_INFO  0x814E     // 坐标信息
 
-#define XOFFSET                    (-22.73)
-#define YOFFSET                    (-76.84)
-
-#define TOUCH_AD_LEFT              60
-#define TOUCH_AD_RIGHT             1992 // A/D 转换器返回的最大值
-#define TOUCH_AD_TOP               1927
-#define TOUCH_AD_BOTTOM            85
+// 触控点数
+#define TouchMax               5
 
 /****************************************************************************/
 /*                                                                          */
 /*              全局变量                                                    */
 /*                                                                          */
 /****************************************************************************/
-float xscale = DEFAULT_XSCALE;
-float yscale = DEFAULT_YSCALE;
-float xoffset = XOFFSET;
-float yoffset = YOFFSET;
-
-// 触摸坐标
-int x;
-int y;
-
-// 触摸标志
-char touch_flag;
+stTouchInfo TouchInfo;
 
 /****************************************************************************/
 /*                                                                          */
-/*              函数声明                                                    */
+/*              GPIO 管脚复用配置                                           */
 /*                                                                          */
 /****************************************************************************/
-void tsc2046ReadAxis(char mode, int*p1);
-
-/****************************************************************************/
-/*                                                                          */
-/*              延时                                                        */
-/*                                                                          */
-/****************************************************************************/
-static void Delay(volatile unsigned int delay)
+static void GPIOBankPinMuxSet()
 {
-    while(delay--);
+    // GPIO6[01] CTP_RESET
+    HWREG(SOC_SYSCFG_0_REGS + SYSCFG0_PINMUX(19)) = (HWREG(SOC_SYSCFG_0_REGS + SYSCFG0_PINMUX(19)) & (~(SYSCFG_PINMUX19_PINMUX19_23_20))) |
+                                                    (SYSCFG_PINMUX19_PINMUX19_23_20_GPIO6_1 << SYSCFG_PINMUX19_PINMUX19_23_20_SHIFT);
+
+    // GPIO8[10] CTP_INT
+    HWREG(SOC_SYSCFG_0_REGS + SYSCFG0_PINMUX(18)) = (HWREG(SOC_SYSCFG_0_REGS + SYSCFG0_PINMUX(18)) & (~(SYSCFG_PINMUX18_PINMUX18_31_28))) |
+                                                    (SYSCFG_PINMUX18_PINMUX18_31_28_GPIO8_10 << SYSCFG_PINMUX18_PINMUX18_31_28_SHIFT);
+}
+
+/****************************************************************************/
+/*                                                                          */
+/*              复位                                                        */
+/*                                                                          */
+/****************************************************************************/
+static void TouchReset()
+{
+    // 复位并配置 I2C 设备地址为 0x5D(写地址 0xBA 读地址 0xBB)
+    GPIODirModeSet(SOC_GPIO_0_REGS, TouchResetPin, GPIO_DIR_OUTPUT);
+    GPIODirModeSet(SOC_GPIO_0_REGS, TouchIntPin, GPIO_DIR_OUTPUT);
+
+    GPIOPinWrite(SOC_GPIO_0_REGS, TouchResetPin, GPIO_PIN_HIGH);
+    GPIOPinWrite(SOC_GPIO_0_REGS, TouchIntPin, GPIO_PIN_LOW);
+    Delay(0x00FFFFFF);  // 超过 100us
+
+    // 复位
+    GPIOPinWrite(SOC_GPIO_0_REGS, TouchResetPin, GPIO_PIN_LOW);
+    Delay(0x00FFFFFF);  // 超过 5ms
+
+    GPIOPinWrite(SOC_GPIO_0_REGS, TouchResetPin, GPIO_PIN_HIGH);
+    Delay(0x00FFFFFF);
+
+    // 配置中断引脚为输入
+    GPIODirModeSet(SOC_GPIO_0_REGS, TouchIntPin, GPIO_DIR_INPUT);
+    Delay(0x00FFFFFF);
+
+    // 配置中断触发方式
+    GPIOIntTypeSet(SOC_GPIO_0_REGS, TouchIntPin, GPIO_INT_TYPE_RISEDGE);
+
+    // 使能 GPIO BANK 中断
+    GPIOBankIntEnable(SOC_GPIO_0_REGS, 8);
+}
+
+/****************************************************************************/
+/*                                                                          */
+/*              获取触摸坐标                                                */
+/*                                                                          */
+/****************************************************************************/
+void TouchXYGet()
+{
+    // 设置从设备地址
+    I2CMasterSlaveAddrSet(SOC_I2C_0_REGS, ADDRESS);
+
+    unsigned char val[TouchMax * 8 + 1];
+
+    // 读取触摸状态
+    val[0] = I2CHWRegRead(SOC_I2C_0_REGS, GT9XX_C00RDINATE_INFO);
+    TouchInfo.Num = val[0] & 0x0F;
+
+    if((TouchInfo.Num >= 1) && (TouchInfo.Num <= TouchMax))
+    {
+        // 读取触摸坐标
+        int i;
+        for(i = 0; i < 8 * TouchInfo.Num; i++)
+        {
+            val[i] = I2CHWRegRead(SOC_I2C_0_REGS, GT9XX_C00RDINATE_INFO + 1 + i);
+        }
+
+        // 写入坐标
+        for(i = 0; i < TouchInfo.Num; i++)
+        {
+            TouchInfo.X[i] = (val[i * 8 + 2] << 8) | val[i * 8 + 1];
+            TouchInfo.Y[i] = (val[i * 8 + 4] << 8) | val[i * 8 + 3];
+        }
+
+        TouchInfo.Flag = true;
+    }
+    else
+    {
+        TouchInfo.Flag = false;
+    }
+
+    // 清除标志位
+    I2CHWRegWrite(SOC_I2C_0_REGS, GT9XX_C00RDINATE_INFO, 0);
 }
 
 /****************************************************************************/
@@ -67,57 +146,29 @@ static void Delay(volatile unsigned int delay)
 /*              触摸屏中断服务函数                                          */
 /*                                                                          */
 /****************************************************************************/
-Void TouchIsr(UArg arg)
+Void TouchHwi(UArg arg)
 {
-	GPIOBankIntDisable(SOC_GPIO_0_REGS, 2);
+    GPIOBankIntDisable(SOC_GPIO_0_REGS, 8);
 
-	if (GPIOPinIntStatus(SOC_GPIO_0_REGS, 45) == GPIO_INT_PEND)
-	{
-		touch_flag = 1;
-	}
+    if(GPIOPinIntStatus(SOC_GPIO_0_REGS, TouchIntPin) == GPIO_INT_PEND)
+    {
+        TouchXYGet();
+    }
 
-	GPIOPinIntClear(SOC_GPIO_0_REGS, 45);
+    GPIOPinIntClear(SOC_GPIO_0_REGS, TouchIntPin);
 
-	GPIOBankIntEnable(SOC_GPIO_0_REGS, 2);
+    GPIOBankIntEnable(SOC_GPIO_0_REGS, 8);
 }
 
-/****************************************************************************/
-/*                                                                          */
-/*              触摸屏管脚初始化                                            */
-/*                                                                          */
-/****************************************************************************/
-void TouchGPIOInit(void)
+static Void HwiInit()
 {
-	volatile unsigned int savePinMux = 0;
+    /* 映射到组合事件中断 */
+    // EVT0  1 - 31
+    // EVT1 32 - 63
+    // EVT2 64 - 95
+    // EVT3 96 - 127
 
-	savePinMux = HWREG(SOC_SYSCFG_0_REGS + SYSCFG0_PINMUX(5)) & \
-						 ~(SYSCFG_PINMUX5_PINMUX5_15_12);
-
-	HWREG(SOC_SYSCFG_0_REGS + SYSCFG0_PINMUX(5)) = \
-    		 (PINMUX5_GPIO2_12_ENABLE | savePinMux);
-
-	// 设置GPIO2[12]为输入模式
-	GPIODirModeSet(SOC_GPIO_0_REGS, 45, GPIO_DIR_INPUT);
-
-	// 设置GPIO2[12]为下降沿触发中断模式
-	GPIOIntTypeSet(SOC_GPIO_0_REGS, 45, GPIO_INT_TYPE_FALLEDGE);
-
-	// 设置允许GPIO2[15：0]产生中断
-	GPIOBankIntEnable(SOC_GPIO_0_REGS, 2);
-}
-
-/****************************************************************************/
-/*                                                                          */
-/*              触摸屏坐标初始化                                            */
-/*                                                                          */
-/****************************************************************************/
-void TouchInitXY(void)
-{
-	xscale=(float)800.0 / (TOUCH_AD_RIGHT - TOUCH_AD_LEFT); // 得到xscale
-	xoffset=(float)(800.0 - xscale * TOUCH_AD_RIGHT);       // 得到xoff
-
-	yscale=(float)480.0 / (TOUCH_AD_TOP - TOUCH_AD_BOTTOM); // 得到yscale
-	yoffset=(float)(480.0 - yscale * TOUCH_AD_TOP);         // 得到yoff
+    EventCombiner_dispatchPlug(SYS_INT_GPIO_B8INT, &TouchHwi, 0, TRUE);
 }
 
 /****************************************************************************/
@@ -125,196 +176,40 @@ void TouchInitXY(void)
 /*              触摸屏初始化                                                */
 /*                                                                          */
 /****************************************************************************/
-void TouchInit(void)
+void TouchInit()
 {
-	unsigned int  val = SIMO_SOMI_CLK_CS1;
-	unsigned char dcs = 0x01;
-	unsigned char cs  = 0x01;
+    // 使能外设
+    PSCModuleControl(SOC_PSC_1_REGS, HW_PSC_GPIO, PSC_POWERDOMAIN_ALWAYS_ON, PSC_MDCTL_NEXT_ENABLE);
 
-	TouchInitXY();
+    // 管脚复用配置
+    GPIOBankPinMuxSet();
 
-	TouchGPIOInit();
+    // 复位并配置 I2C 设备地址
+    TouchReset();
 
-	SPIReset(SOC_SPI_1_REGS);
+    // I2C 配置
+    I2CInit(SOC_I2C_0_REGS, ADDRESS);
 
-	SPIOutOfReset(SOC_SPI_1_REGS);
+    // 硬件中断线程初始化
+    HwiInit();
 
-	// 主机模式
-	SPIModeConfigure(SOC_SPI_1_REGS, SPI_MASTER_MODE);
+    // 读取触控芯片信息
+    ConsoleWrite("\r\nTouch IC Info\r\n");
+    unsigned char val[16];
+    val[0] = I2CHWRegRead(SOC_I2C_0_REGS, GT9XX_CFG_VER);
+    ConsoleWrite("Config Version: 0x%x\n", val[0]);
 
-	SPIClkConfigure(SOC_SPI_1_REGS, 228000000, 1000000, SPI_DATA_FORMAT0);
-
-	// 使能SIMO_SOMI_CLK_CS1引脚
-	SPIPinControl(SOC_SPI_1_REGS, 0, 0, &val);
-
-	// 设置CS1空闲时为高电平
-	SPIDefaultCSSet(SOC_SPI_1_REGS, (dcs<<1));
-
-	// 配置 SPI 数据格式
-	SPIConfigClkFormat(SOC_SPI_1_REGS,
-					 (SPI_CLK_POL_LOW | SPI_CLK_OUTOFPHASE),  // SPI_CLK_POL_LOW     - 在数据传输前后时钟保持低
-					 SPI_DATA_FORMAT0);					      // SPI_CLK_INPHASE     - 时钟不延时
-															  // SPI_CLK_OUTOFPHASE  - 时钟延时半个时钟周期
-
-	SPIShiftMsbFirst(SOC_SPI_1_REGS, SPI_DATA_FORMAT0);
-
-	// 设置字符长度
-	SPICharLengthSet(SOC_SPI_1_REGS, 8, SPI_DATA_FORMAT0);
-
-	SPIDat1Config(SOC_SPI_1_REGS, (SPI_CSHOLD | SPI_DATA_FORMAT0), (cs<<1));
-
-	// 使能 SPI
-	SPIEnable(SOC_SPI_1_REGS);
-}
-
-/****************************************************************************/
-/*                                                                          */
-/*              取得 AD 值                                                  */
-/*                                                                          */
-/****************************************************************************/
-int Read_touch_ad(void)
-{
-	int result=0, re1, re2;
-
-	SPITransmitData1(SOC_SPI_1_REGS, 0);
-	while( (HWREG(SOC_SPI_1_REGS + SPI_SPIBUF) & 0x80000000 ));
-	re1 = SPIDataReceive(SOC_SPI_1_REGS);
-
-	SPITransmitData1(SOC_SPI_1_REGS, 0);
-	while( (HWREG(SOC_SPI_1_REGS + SPI_SPIBUF) & 0x80000000 ));
-	re2 = SPIDataReceive(SOC_SPI_1_REGS);
-
-	result = (re1<<4) + (re2>>4);
-
-	return result;
-}
-
-/****************************************************************************/
-/*                                                                          */
-/*              触摸检测                                                    */
-/*                                                                          */
-/****************************************************************************/
-unsigned int TouchDetect(void)
-{
-    return ((0 == touch_flag) ? FALSE : TRUE);
-}
-
-/****************************************************************************/
-/*                                                                          */
-/*              取得坐标值                                                  */
-/*                                                                          */
-/****************************************************************************/
-void tsc2046ReadAxis(char mode, int*p1)
-{
-    unsigned int result1=0;
-    unsigned char count=0,t,t1;
-    unsigned int databuffer[30],temp;
-
-    switch(mode)
+    int i;
+    for(i = 0; i < 11; i++)
     {
-    	case 0:
-			do{
-				SPIDat1Config(SOC_SPI_1_REGS, (SPI_CSHOLD | SPI_DATA_FORMAT0), (1<<1));
-				SPITransmitData1(SOC_SPI_1_REGS, 0x93);
-				Delay(0xf);
-
-				while((HWREG(SOC_SPI_1_REGS + SPI_SPIBUF) & 0x80000000 ));
-
-				databuffer[count] = Read_touch_ad();
-				count++;
-			}while(count<10);
-
-			SPIDat1Config(SOC_SPI_1_REGS, SPI_DATA_FORMAT0, (1<<1));
-			if(count == 10)
-			{
-				do                                            // 将数据X升序排列
-				{
-					t1=0;
-					for(t=0;t<count-1;t++)
-					{
-						if(databuffer[t]>databuffer[t+1])     // 升序排列
-						{
-							temp=databuffer[t+1];
-							databuffer[t+1]=databuffer[t];
-							databuffer[t]=temp;
-							t1=1;
-						}
-					}
-				}while(t1);
-			}
-
-			break;
-		case 1:
-			do{
-				SPIDat1Config(SOC_SPI_1_REGS, (SPI_CSHOLD | SPI_DATA_FORMAT0), (1<<1));
-				SPITransmitData1(SOC_SPI_1_REGS, 0xd3);
-				Delay(0xf);
-
-				while( (HWREG(SOC_SPI_1_REGS + SPI_SPIBUF) & 0x80000000 ) );
-				databuffer[count] = Read_touch_ad();
-				count++;
-				//Delay(0xf);
-			}while(count<10);
-
-			SPIDat1Config(SOC_SPI_1_REGS, SPI_DATA_FORMAT0, (1<<1));
-			if(count == 10)
-			{
-				 do                                            // 将数据X升序排列
-				{
-					t1=0;
-					for(t=0;t<count-1;t++)
-					{
-						if(databuffer[t]>databuffer[t+1])      // 升序排列
-						{
-							temp=databuffer[t+1];
-							databuffer[t+1]=databuffer[t];
-							databuffer[t]=temp;
-							t1=1;
-						}
-					}
-				}while(t1);
-			}
-
-			break;
+        val[i] = I2CHWRegRead(SOC_I2C_0_REGS, GT9XX_PRODUCT_ID + i);
     }
 
-    for(count=3;count<8;count++)
-    {
-    	result1 = result1 + databuffer[count];
-    }
-    *p1 = result1/5;
-}
+    char str[64];
+    sprintf(str, "Product ID: GT%c%c%c%c", val[0], val[1], val[2], val[3]);
+    ConsoleWrite("%s\n", str);
 
-void TouchCoOrdGet(int *pX, int *pY)
-{
-    unsigned short xpos, ypos;
-    char x = 1, y =0;
-    int rx1 = 0;
-    int ry1 = 0;
-    unsigned int xDpos = 0;
-    int yDpos = 0;
-
-    tsc2046ReadAxis(x, &rx1);
-
-    tsc2046ReadAxis(y, &ry1);
-
-    SPITransmitData1(SOC_SPI_1_REGS, 0x90);
-    while( (HWREG(SOC_SPI_1_REGS + SPI_SPIBUF) & 0x80000000 ) );
-
-    xpos = rx1;
-
-    ypos = ry1;
-
-    xDpos = xpos * xscale + xoffset;
-    yDpos = ypos * yscale + yoffset;
-
-    yDpos = LCD_HEIGHT - yDpos;
-
-    if(yDpos < 0)
-    {
-        yDpos = 0;
-    }
-
-    *pX =(int)xDpos;
-    *pY = yDpos;
+    ConsoleWrite("Firmware Version: 0x%x\n", (val[5] << 8) | val[4]);
+    ConsoleWrite("X/Y Coordinate Resolution: %dx%d\n", (val[7] << 8) | val[6], (val[9] << 8) | val[8]);
+    ConsoleWrite("Vendor ID: 0x%x\r\n\r\n", val[10]);
 }

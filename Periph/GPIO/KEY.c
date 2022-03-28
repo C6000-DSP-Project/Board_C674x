@@ -68,14 +68,6 @@ static void GPIOBankPinInit()
 /*              软件中断线程                                                */
 /*                                                                          */
 /****************************************************************************/
-// 指令延时（非精确）
-static Void Delay(UInt n)
-{
-    UInt i;
-
-    for(i = n; i > 0; i--);
-}
-
 Swi_Handle KEY4SwiHandle;
 Swi_Handle KEY6SwiHandle;
 

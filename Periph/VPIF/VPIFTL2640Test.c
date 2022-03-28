@@ -19,7 +19,6 @@
 *******************************************************************************/
 extern	void VPIFPinMuxSetUp(void);
 static void VPIFSetup(void);
-static void Delay(volatile unsigned int delay);
 
 /******************************************************************************
 **                      全局变量定义
@@ -210,15 +209,4 @@ static void VPIFSetup(void)
 	/* Enable capture */
 	VPIFCaptureChanenEnable(SOC_VPIF_0_REGS, VPIF_CHANNEL_0);
 	VPIFCaptureChanenEnable(SOC_VPIF_0_REGS, VPIF_CHANNEL_1);
-}
-
-/****************************************************************************/
-/*                                                                          */
-/*              指令时钟方法延时				                                */
-/*                                                                          */
-/*   delay   -- 循环次数 	        	                                        */
-/****************************************************************************/
-static void Delay(volatile unsigned int delay)
-{
-    while(delay--);
 }

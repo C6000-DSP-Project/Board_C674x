@@ -81,6 +81,11 @@ void TempSensorGet(float *t, float *rh)
     // 设置从设备地址
     I2CMasterSlaveAddrSet(SOC_I2C_0_REGS, ADDRESS);
 
+    // 访问结果寄存器
+    I2CData[0] = 0xE0;
+    I2CData[1] = 0x00;
+    I2CSendBlocking(SOC_I2C_0_REGS, 2);
+
     // 读取数据
     I2CRcvBlocking(SOC_I2C_0_REGS, 6);
 

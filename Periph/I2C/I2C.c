@@ -63,6 +63,8 @@ void I2CSendBlocking(unsigned int baseAddr, unsigned int dataCnt)
 
     I2CMasterControl(baseAddr, I2C_CFG_MST_TX | I2C_CFG_STOP);
 
+    I2CMasterIntEnableEx(baseAddr, I2C_INT_TRANSMIT_READY | I2C_INT_STOP_CONDITION | I2C_INT_NO_ACK);
+
     I2CMasterStart(baseAddr);
 
     unsigned short i;
@@ -74,7 +76,7 @@ void I2CSendBlocking(unsigned int baseAddr, unsigned int dataCnt)
 
     while(I2CMasterIntStatus(baseAddr) & 0x00001000);
 
-//  I2CMasterStop(SOC_I2C_0_REGS);
+    I2CMasterStop(SOC_I2C_0_REGS);
 }
 
 /****************************************************************************/
@@ -87,6 +89,8 @@ void I2CRcvBlocking(unsigned int baseAddr, unsigned int dataCnt)
     I2CSetDataCount(baseAddr, dataCnt);
 
     I2CMasterControl(baseAddr, I2C_CFG_MST_RX | I2C_CFG_STOP);
+
+    I2CMasterIntEnableEx(baseAddr, I2C_INT_DATA_READY | I2C_INT_STOP_CONDITION | I2C_INT_NO_ACK);
 
     I2CMasterStart(baseAddr);
 
@@ -107,6 +111,7 @@ void I2CRcvBlocking(unsigned int baseAddr, unsigned int dataCnt)
 /*              I2C 写寄存器                                                */
 /*                                                                          */
 /****************************************************************************/
+// 8Bit 地址
 void I2CRegWrite(unsigned int baseAddr, unsigned char regAddr, unsigned char regData)
 {
     // 发送寄存器地址和数据
@@ -116,16 +121,47 @@ void I2CRegWrite(unsigned int baseAddr, unsigned char regAddr, unsigned char reg
     I2CSendBlocking(baseAddr, 2);
 }
 
+// 16Bit 地址
+void I2CHWRegWrite(unsigned int baseAddr, unsigned short regAddr, unsigned char regData)
+{
+    // 发送寄存器地址和数据
+    I2CData[0] = regAddr >> 8;
+    I2CData[1] = regAddr & 0xFF;
+    I2CData[2] = regData;
+
+    I2CSendBlocking(baseAddr, 3);
+}
+
 /****************************************************************************/
 /*                                                                          */
 /*              I2C 读寄存器                                                */
 /*                                                                          */
 /****************************************************************************/
+// 8Bit 地址
 unsigned char I2CRegRead(unsigned int baseAddr, unsigned char regAddr)
 {
     // 发送寄存器地址
-    I2CData[0] = regAddr;
-    I2CSendBlocking(baseAddr, 1);
+    I2CData[0] = regAddr >> 8;
+    I2CData[1] = regAddr & 0xFF;
+    I2CSendBlocking(baseAddr, 2);
+
+    // 等待传输完成
+    unsigned short i = 50000;
+    while(i--);
+
+    // 接收寄存器返回数据
+    I2CRcvBlocking(baseAddr, 1);
+
+    return I2CData[0];
+}
+
+// 16Bit 地址
+unsigned char I2CHWRegRead(unsigned int baseAddr, unsigned short regAddr)
+{
+    // 发送寄存器地址
+    I2CData[0] = regAddr >> 8;
+    I2CData[1] = regAddr & 0xFF;
+    I2CSendBlocking(baseAddr, 2);
 
     // 等待传输完成
     unsigned short i = 50000;

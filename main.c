@@ -100,6 +100,9 @@ Void HardwareInit()
     // ª∫¥Ê≈‰÷√
     CacheInit();
 
+    // ªÒ»° PLL  ±÷”
+    PLLClockGet();
+
     // LED
     LEDInit();
 
@@ -129,6 +132,9 @@ Void HardwareInit()
 
     // LCD
     LCDInit();
+
+    // ¥•√˛∆¡
+    TouchInit();
 }
 
 /****************************************************************************/

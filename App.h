@@ -62,6 +62,7 @@
 // StarterWare 库
 #include "hw_types.h"
 #include "hw_syscfg0_C6748.h"
+#include "hw_pllc_C6748.h"
 #include "hw_psc_C6748.h"
 
 #include "soc_C6748.h"
@@ -106,15 +107,57 @@
 /*              全局变量                                                    */
 /*                                                                          */
 /****************************************************************************/
+// MAC/IP 地址
 extern unsigned char MacAddr[8];
-extern struct tm RTCTime;
 extern char StrIP[16];
+
+// RTC 时间
+extern struct tm RTCTime;
+
+// PLL
+typedef struct
+{
+    unsigned int PLL0_SYSCLK1;  // DSP
+    unsigned int PLL0_SYSCLK2;  // ARM RAM/ROM, DSP ports, Shared RAM, UART0, EDMA, SPI0, MMC/SD0/1, VPIF, LCDC, SATA, uPP, DDR2/mDDR (bus ports), USB2.0, HPI, PRU
+    unsigned int PLL0_SYSCLK3;  // EMIFA
+    unsigned int PLL0_SYSCLK4;  // SYSCFG, GPIO, PLL0/1, PSC, I2C1, EMAC/MDIO, USB1.1, ARM INTC
+    unsigned int PLL0_SYSCLK5;  // 未使用
+    unsigned int PLL0_SYSCLK6;  // ARM
+    unsigned int PLL0_SYSCLK7;  // EMAC RMII Clock
+    unsigned int PLL0_AUXCLK;   // PLL 旁路时钟(24MHz)
+                                 // I2C0, Timer64P0/P1, RTC, USB2.0 PHY, McASP0 Serial Clock
+    unsigned int PLL0_OBSCLK;   // 时钟输出
+
+    unsigned int PLL1_SYSCLK1;  // DDR2/mDDR PHY
+    unsigned int PLL1_SYSCLK2;  // ECAP0/1/2, UART1/2, Timer64P2/3, eHRPWM0/1, McBSP0/1, McASP0, SPI1 (默认使用 PLL0_SYSCLK2)
+    unsigned int PLL1_SYSCLK3;  // PLL0 输入参考时钟
+} PLLClock;
+
+extern PLLClock pllcfg;
+
+// 启动模式
+extern unsigned int BootMode;
+extern char *BootModeStr[];
+
+// 触摸屏坐标
+typedef struct
+{
+    unsigned char Flag;         // 触摸标志
+    unsigned char Num;          // 触摸点数
+    unsigned short X[10];       // 横坐标
+    unsigned short Y[10];       // 纵坐标
+} stTouchInfo;
+
+extern stTouchInfo TouchInfo;
 
 /****************************************************************************/
 /*                                                                          */
 /*              函数声明                                                    */
 /*                                                                          */
 /****************************************************************************/
+void BootModeGet();
+void PLLClockGet();
+
 void LEDInit();
 void LEDControl(unsigned char LED, char Status);
 void LEDNixieInit();
@@ -132,11 +175,17 @@ void TimerInit();
 void I2CInit(unsigned int baseAddr, unsigned int slaveAddr);
 unsigned char I2CRegRead(unsigned int baseAddr , unsigned char regAddr);
 void I2CRegWrite(unsigned int baseAddr, unsigned char regAddr, unsigned char regData);
+unsigned char I2CHWRegRead(unsigned int baseAddr, unsigned short regAddr);
+void I2CHWRegWrite(unsigned int baseAddr, unsigned short regAddr, unsigned char regData);
 
 void TempSensorInit();
+void TempSensorGet(float *t, float *rh);
 
 void RTCInit();
 void RTCSet();
+
+void LCDInit();
+void TouchInit();
 
 Void ECAPInit();
 Void PWMInit(unsigned int pwm_clk, unsigned short duty_ratio);
@@ -144,7 +193,6 @@ Void PWMInit(unsigned int pwm_clk, unsigned short duty_ratio);
 Void SPIFlashInit();
 Void SPIFlashTest(Void);
 
-Void LCDInit();
 Void EDMAInit();
 Void EEPROMTest(Void);
 
