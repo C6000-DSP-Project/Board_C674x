@@ -255,47 +255,45 @@ int ReadLine()
             else if((ucChar >= ' ') && (ucChar <= '~') &&
                     (ulIdx < (sizeof(g_cCmdBuf) - 1)))
             {
-                /*
-                if((ucChar == '[' || ucChar == 'A' || ucChar == 'B' || ucChar == 'C' || ucChar == 'D'))
+                if((ucChar == '['))
                 {
+                    // 读下一个字符
+                    ucChar = (unsigned char)UARTCharGet(UARTConsole);
 
-                   if(CmdHistorySaveNo != 0)
+                    if(CmdHistorySaveNo != 0)
                     {
-                        // 删除所有字符
-                        while(ulIdx)
+                        if(ucChar == 'A' || ucChar == 'B' || ucChar == 'C' || ucChar == 'D')
                         {
-                            UARTprintf("\b \b");
-                            ulIdx--;
-                        }
-                        g_cCmdBuf[0] = '\0';
+                            switch(ucChar)
+                            {
+                                case 'A': // 上
+                                        if(CmdHistoryDisplayIndex > 0 && CmdHistoryDisplayIndex < CmdHistorySaveNo)
+                                        {
+                                            CmdHistoryDisplayIndex--;
+                                        }
+                                        break;
 
-                        // 读下一个字符
-                        if(ucChar == '[')
-                        {
-                            ucChar = (unsigned char)UARTCharGet(UARTConsole);
-                        }
+                                case 'B': // 下
+                                        if(CmdHistoryDisplayIndex <= 31 && CmdHistoryDisplayIndex < CmdHistorySaveNo - 1)
+                                        {
+                                            CmdHistoryDisplayIndex++;
+                                        }
+                                        break;
 
-                        switch(ucChar)
-                        {
-                            case 65: // 上
-                                    if(CmdHistoryDisplayIndex > 0 && CmdHistoryDisplayIndex < CmdHistorySaveNo)
-                                    {
-                                        CmdHistoryDisplayIndex--;
-                                    }
-                                    break;
+                                case 'C': // 左
+                                        break;
 
-                            case 66: // 下
-                                    if(CmdHistoryDisplayIndex <= 31 && CmdHistoryDisplayIndex < CmdHistorySaveNo - 1)
-                                    {
-                                        CmdHistoryDisplayIndex++;
-                                    }
-                                    break;
+                                case 'D': // 右
+                                        break;
+                            }
 
-                            case 67: // 左
-                                    break;
-
-                            case 68: // 右
-                                    break;
+                            // 删除所有字符
+                            while(ulIdx)
+                            {
+                                UARTprintf("\b \b");
+                                ulIdx--;
+                            }
+                            g_cCmdBuf[0] = '\0';
                         }
 
                         strcpy(g_cCmdBuf, CmdHistory[CmdHistoryDisplayIndex]);
@@ -311,11 +309,6 @@ int ReadLine()
 
                     UARTprintf("%c", ucChar);
                 }
-                */
-                g_cCmdBuf[ulIdx++] = ucChar;
-                g_cCmdBuf[ulIdx] = '\0';
-
-                UARTprintf("%c", ucChar);
             }
         }
     }
