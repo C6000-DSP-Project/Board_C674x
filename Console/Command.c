@@ -112,7 +112,7 @@ int Cmd_PRULoad(int argc, char *argv[])
 {
     UARTprintf("\r\nPRU LED Test Application\r\n");
     UARTprintf("--------------------------------------------------------------\r\n");
-    PruLEDTest();
+
     return 0;
 }
 
@@ -258,6 +258,26 @@ int Cmd_RTC(int argc, char *argv[])
     return 0;
 }
 
+/****************************************************************************/
+/*                                                                          */
+/*              WIFI                                                        */
+/*                                                                          */
+/****************************************************************************/
+int Cmd_WIFI(int argc, char *argv[])
+{
+    if((!strcmp(argv[1], "-e") || !strcmp(argv[1], "--exit")))
+    {
+        UART1Puts("+++", -1);
+    }
+    else
+    {
+        UART1Puts(argv[1], -1);
+        UART1Puts("\r\n", -1);
+    }
+
+    return 0;
+}
+
 // ÃüÁî×Ö±í
 tCmdLineEntry g_sCmdTable[] =
 {
@@ -279,6 +299,8 @@ tCmdLineEntry g_sCmdTable[] =
     {"date",         Cmd_Date,       "\t\t - Get/Set System Date or Time."},
     {"hwclock",      Cmd_RTC,        "\t\t - Get/Set RTC Date or Time."},
     {"clock",        Cmd_RTC,        "\t\t - Get/Set RTC Date or Time."},
+
+    {"wifi",         Cmd_WIFI,       "\t\t - WIFI."},
 
     { 0, 0, 0 }
 };

@@ -137,12 +137,12 @@ void EMACRMIIGPIOBankPinMuxSet()
 // 这个函数被 NSP 驱动调用 请勿修改函数名
 void EMAC_initialize()
 {
+    // 使能外设
+    PSCModuleControl(SOC_PSC_1_REGS, HW_PSC_EMAC, PSC_POWERDOMAIN_ALWAYS_ON, PSC_MDCTL_NEXT_ENABLE);
+
     // 使能 MII 模式
     MDIOGPIOBankPinMuxSet();
     EMACMIIGPIOBankPinMuxSet();
-
-    // 使能外设
-    PSCModuleControl(SOC_PSC_1_REGS, HW_PSC_EMAC, PSC_POWERDOMAIN_ALWAYS_ON, PSC_MDCTL_NEXT_ENABLE);
 }
 
 /****************************************************************************/

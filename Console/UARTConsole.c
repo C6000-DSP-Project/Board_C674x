@@ -24,8 +24,6 @@
 /****************************************************************************/
 #define UART_FREQ       pllcfg.PLL0_SYSCLK2 * 1000000
 
-#define UARTConsole     SOC_UART_2_REGS
-
 // 命令字长度限制
 #define CmdSize 64
 
@@ -131,7 +129,7 @@ static Void HwiInit()
 /*              任务线程                                                    */
 /*                                                                          */
 /****************************************************************************/
-unsigned int UARTPuts(char *pTxBuffer, int numBytesToWrite)
+static unsigned int UARTPuts(char *pTxBuffer, int numBytesToWrite)
 {
     unsigned int count = 0;
     unsigned int flag = 0;
@@ -257,10 +255,11 @@ int ReadLine()
             else if((ucChar >= ' ') && (ucChar <= '~') &&
                     (ulIdx < (sizeof(g_cCmdBuf) - 1)))
             {
+                /*
                 if((ucChar == '[' || ucChar == 'A' || ucChar == 'B' || ucChar == 'C' || ucChar == 'D'))
                 {
 
-                    if(CmdHistorySaveNo != 0)
+                   if(CmdHistorySaveNo != 0)
                     {
                         // 删除所有字符
                         while(ulIdx)
@@ -312,6 +311,11 @@ int ReadLine()
 
                     UARTprintf("%c", ucChar);
                 }
+                */
+                g_cCmdBuf[ulIdx++] = ucChar;
+                g_cCmdBuf[ulIdx] = '\0';
+
+                UARTprintf("%c", ucChar);
             }
         }
     }

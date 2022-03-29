@@ -1,7 +1,0 @@
-// assembly constants/macros. 
-
-#ifndef _TL_PRU0_GPIOLED_HP_
-#define _TL_PRU0_GPIOLED_HP_
-
-
-#endif // _TL_PRU0_GPIOTOGGLE_HP_

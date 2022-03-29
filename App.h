@@ -73,10 +73,11 @@
 #include "i2c.h"
 #include "spi.h"
 
+#include "pru.h"
+
 #include "interrupt.h"
 
 #include "LCD/LCD.h"
-#include "LCD/Touch.h"
 
 /****************************************************************************/
 /*                                                                          */
@@ -101,6 +102,9 @@
 
 // ·äÃùÆ÷
 #define BUZZER      1
+
+// µ÷ÊÔ´®¿Ú
+#define UARTConsole SOC_UART_2_REGS
 
 /****************************************************************************/
 /*                                                                          */
@@ -161,6 +165,7 @@ void PLLClockGet();
 void LEDInit();
 void LEDControl(unsigned char LED, char Status);
 void LEDNixieInit();
+void LEDMatrixInit();
 
 void KEYInit();
 
@@ -168,7 +173,9 @@ void BUZZERInit();
 void BUZZERBeep(unsigned int t);
 
 void UARTConsoleInit();
+
 void UART1Init();
+unsigned int UART1Puts(char *pTxBuffer, int numBytesToWrite);
 
 void TimerInit();
 

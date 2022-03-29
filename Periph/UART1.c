@@ -35,16 +35,7 @@
 #define EMUCNT1           *(volatile unsigned int*)0x01C111F4
 
 // 时钟
-#define SYSCLK_1_FREQ     (456000000)
-#define SYSCLK_2_FREQ     (SYSCLK_1_FREQ/2)
-#define UART_1_FREQ       (SYSCLK_2_FREQ)
-
-/****************************************************************************/
-/*                                                                          */
-/*              全局变量                                                    */
-/*                                                                          */
-/****************************************************************************/
-char txArray[] = "UART1 Message...\n\r";
+#define UART_1_FREQ       (pllcfg.PLL0_SYSCLK2 * 1000000)
 
 /****************************************************************************/
 /*                                                                          */
@@ -92,9 +83,7 @@ static void UARTInterruptInit()
 {
 	// 使能中断
 	unsigned int intFlags = 0;
-    intFlags |= (UART_INT_LINE_STAT  |  \
-                 UART_INT_TX_EMPTY |    \
-                 UART_INT_RXDATA_CTI);
+    intFlags |= (UART_INT_LINE_STAT | UART_INT_RXDATA_CTI);
     UARTIntEnable(SOC_UART_1_REGS, intFlags);
 }
 
@@ -105,36 +94,17 @@ static void UARTInterruptInit()
 /****************************************************************************/
 Void UART1Hwi(UArg arg)
 {
-    static unsigned int length = sizeof(txArray);
-    static unsigned int count = 0;
-    unsigned char rxData = 0;
     unsigned int int_id = 0;
+    unsigned char rxData = 0;
 
     // 确定中断源
     int_id = UARTIntStatus(SOC_UART_1_REGS);
-
-    // 发送中断
-    if(UART_INTID_TX_EMPTY == int_id)
-    {
-        if(0 < length)
-        {
-            // 写一个字节到 THR
-            UARTCharPutNonBlocking(SOC_UART_1_REGS, txArray[count]);
-            length--;
-            count++;
-        }
-        if(0 == length)
-        {
-            // 禁用发送中断
-            UARTIntDisable(SOC_UART_1_REGS, UART_INT_TX_EMPTY);
-        }
-     }
 
     // 接收中断
     if(UART_INTID_RX_DATA == int_id)
     {
         rxData = UARTCharGetNonBlocking(SOC_UART_1_REGS);
-        UARTCharPutNonBlocking(SOC_UART_1_REGS, rxData);
+        UARTCharPutNonBlocking(UARTConsole, rxData);
     }
 
     // 接收错误
@@ -150,13 +120,40 @@ Void UART1Hwi(UArg arg)
 
 static Void HwiInit()
 {
-    /* 映射到组合事件中断 */
-    // EVT0  1 - 31
-    // EVT1 32 - 63
-    // EVT2 64 - 95
-    // EVT3 96 - 127
+    Hwi_Params hwiParams;
+    Hwi_Params_init(&hwiParams);
+    hwiParams.eventId = SYS_INT_UART1_INT;
+    Hwi_create(C674X_MASK_INT11, UART1Hwi, &hwiParams, NULL);
+}
 
-    EventCombiner_dispatchPlug(SYS_INT_UART1_INT, &UART1Hwi, 0, TRUE);
+/****************************************************************************/
+/*                                                                          */
+/*              串口输出                                                    */
+/*                                                                          */
+/****************************************************************************/
+unsigned int UART1Puts(char *pTxBuffer, int numBytesToWrite)
+{
+    unsigned int count = 0;
+    unsigned int flag = 0;
+
+    if(numBytesToWrite < 0)
+    {
+        flag = 1;
+    }
+
+    while('\0' != *pTxBuffer)
+    {
+        UARTCharPut(SOC_UART_1_REGS, (unsigned char)*pTxBuffer);
+        pTxBuffer++;
+        count++;
+
+        if((0 == flag) && (count == numBytesToWrite))
+        {
+            break;
+        }
+    }
+
+    return count;
 }
 
 /****************************************************************************/
