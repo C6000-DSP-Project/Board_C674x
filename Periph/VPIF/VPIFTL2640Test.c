@@ -71,11 +71,11 @@ void TL2640Test(void)
 	I2CInit(SOC_I2C_0_REGS, 0x30);
 
 	/* 初始化ov2640 */
-	TL2640Reset();
+	OV2640Reset();
 	Delay(0xffff);
 
 	/*初始化OV2640为SVGA 800*600*/
-	TL2640Init();
+	OV2640Init();
 
     /*初始化VPIF*/
     VPIFSetup();

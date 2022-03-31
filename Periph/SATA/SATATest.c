@@ -1,39 +1,38 @@
 /****************************************************************************/
 /*                                                                          */
-/*              SATA 设备枚举测试                                           */
+/*    新核科技(广州)有限公司                                                */
 /*                                                                          */
-/*              2014年03月19日                                              */
+/*    Copyright (C) 2022 CoreKernel Technology (Guangzhou) Co., Ltd         */
 /*                                                                          */
 /****************************************************************************/
+/****************************************************************************/
+/*                                                                          */
+/*    SATA 设备枚举测试                                                     */
+/*                                                                          */
+/*    2014年03月19日                                                        */
+/*                                                                          */
+/****************************************************************************/
+/*
+ *    - 希望缄默(bin wang)
+ *    - bin@corekernel.net
+ *
+ *    官网 corekernel.net/.org/.cn
+ *    社区 fpga.net.cn
+ *
+ */
 // 该例程仅用于 SATA 设备枚举测试
 // 详情请参阅 TMS320C674x OMAP-L1x Processor Serial ATA (SATA) Controller User's Guide
 
-#include "TL6748.h"                 // 创龙 DSP6748 开发板相关声明
-
-#include "hw_types.h"               // 宏命令
-#include "hw_syscfg1_C6748.h"       // 系统配置模块寄存器
-#include "soc_C6748.h"              // DSP C6748 外设寄存器
+#include "hw_types.h"
+#include "hw_syscfg1_C6748.h"
+#include "soc_C6748.h"
 
 #include "hw_psc_C6748.h"
-#include "psc.h"                    // 电源与睡眠控制宏及设备抽象层函数声明
-#include "uartStdio.h"              // 串口标准输入输出终端函数声明
+#include "psc.h"
+#include "uartStdio.h"
 #include "sata.h"
 
 #include <stdio.h>
-
-/****************************************************************************/
-/*                                                                          */
-/*              宏定义                                                      */
-/*                                                                          */
-/****************************************************************************/
-// 软件断点
-#define SW_BREAKPOINT   asm(" SWBP 0 ");
-
-/****************************************************************************/
-/*                                                                          */
-/*              全局变量                                                    */
-/*                                                                          */
-/****************************************************************************/
 
 /****************************************************************************/
 /*                                                                          */
@@ -90,9 +89,9 @@ static int PSCModuleControlForce(unsigned int baseAdd, unsigned int moduleId, un
 
 static void PSCInit(void)
 {
-	// 使能 SATA 模块
-	// 对相应外设模块的使能也可以在 BootLoader 中完成
+	// 使能 SATA 外设
     PSCModuleControlForce(SOC_PSC_1_REGS, HW_PSC_SATA, PSC_POWERDOMAIN_ALWAYS_ON, PSC_MDCTL_FORCE | PSC_MDCTL_NEXT_ENABLE);
+
     // 使能时钟
     HWREG(SOC_SYSCFG_1_REGS + SYSCFG1_PWRDN) = ~SYSCFG1_PWRDN_SATACLK_PWRDN;
 }
@@ -102,11 +101,8 @@ static void PSCInit(void)
 /*              SATA 测试                                                   */
 /*                                                                          */
 /****************************************************************************/
-void SATATest(void)
+void SATATest()
 {
-	// 设备枚举测试
-	UARTprintf("\r\nTronlong SATA Device Spin-Up Test Application ......\r\n");
-
 	// 外设使能配置
 	PSCInit();
 
@@ -140,4 +136,3 @@ void SATATest(void)
 		UARTprintf("\r\nDisk spin-up failed. \r\n");
 	}
 }
-

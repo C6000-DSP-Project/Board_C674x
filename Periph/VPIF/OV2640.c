@@ -14,7 +14,7 @@ void write_SCCB(unsigned char Reg, unsigned char Data)
 	I2CRegWrite(SOC_I2C_0_REGS, Reg, Data);
 }
 
-void TL2640Init(void)
+void OV2640Init(void)
 {
 	//SVGA 800*600
 	write_SCCB(0xff, 0x01);
@@ -217,7 +217,7 @@ void TL2640Init(void)
 	write_SCCB(0x05, 0x00);
 }
 
-void TL2640Reset(void)
+void OV2640Reset(void)
 {
 	I2CRegWrite(SOC_I2C_0_REGS,OV2640_DSP_RA_DLMT, 0x01);
 	I2CRegWrite(SOC_I2C_0_REGS,OV2640_SENSOR_COM7, 0x80);
@@ -239,7 +239,7 @@ void SCCB_WriteRegs(const unsigned char* pbuf)
 }
 
 
-const static unsigned char TL2640_AUTOEXPOSURE_LEVEL0[]=
+const static unsigned char OV2640_AUTOEXPOSURE_LEVEL0[]=
 {
 	0xFF,	0x01,	0xff,
 	0x24,	0x20,	0xff,
@@ -248,7 +248,7 @@ const static unsigned char TL2640_AUTOEXPOSURE_LEVEL0[]=
 	0x00,	0x00,	0x00
 };
 
-const static unsigned char TL2640_AUTOEXPOSURE_LEVEL1[]=
+const static unsigned char OV2640_AUTOEXPOSURE_LEVEL1[]=
 {
 	0xFF,	0x01,	0xff,
 	0x24,	0x34,	0xff,
@@ -256,7 +256,7 @@ const static unsigned char TL2640_AUTOEXPOSURE_LEVEL1[]=
 	0x26,	0x70,	0xff,
 	0x00,	0x00,	0x00
 };
-const static unsigned char TL2640_AUTOEXPOSURE_LEVEL2[]=
+const static unsigned char OV2640_AUTOEXPOSURE_LEVEL2[]=
 {
 	0xFF,	0x01,	0xff,
 	0x24,	0x3e,	0xff,
@@ -264,7 +264,7 @@ const static unsigned char TL2640_AUTOEXPOSURE_LEVEL2[]=
 	0x26,	0x81,	0xff,
 	0x00,	0x00,	0x00
 };
-const static unsigned char TL2640_AUTOEXPOSURE_LEVEL3[]=
+const static unsigned char OV2640_AUTOEXPOSURE_LEVEL3[]=
 {
 	0xFF,	0x01,	0xff,
 	0x24,	0x48,	0xff,
@@ -272,7 +272,7 @@ const static unsigned char TL2640_AUTOEXPOSURE_LEVEL3[]=
 	0x26,	0x81,	0xff,
 	0x00,	0x00,	0x00
 };
-const static unsigned char TL2640_AUTOEXPOSURE_LEVEL4[]=
+const static unsigned char OV2640_AUTOEXPOSURE_LEVEL4[]=
 {
 	0xFF,	0x01,	0xff,
 	0x24,	0x58,	0xff,
@@ -281,34 +281,34 @@ const static unsigned char TL2640_AUTOEXPOSURE_LEVEL4[]=
 	0x00,	0x00,	0x00
 };
 
-void TL2640_AutoExposure(unsigned char level)
+void OV2640_AutoExposure(unsigned char level)
 {
 	switch(level)
 	{
 		case 0:
-			SCCB_WriteRegs(TL2640_AUTOEXPOSURE_LEVEL0);
+			SCCB_WriteRegs(OV2640_AUTOEXPOSURE_LEVEL0);
 			break;
 		case 1:
-			SCCB_WriteRegs(TL2640_AUTOEXPOSURE_LEVEL1);
+			SCCB_WriteRegs(OV2640_AUTOEXPOSURE_LEVEL1);
 			break;
 		case 2:
-			SCCB_WriteRegs(TL2640_AUTOEXPOSURE_LEVEL2);
+			SCCB_WriteRegs(OV2640_AUTOEXPOSURE_LEVEL2);
 			break;
 		case 3:
-			SCCB_WriteRegs(TL2640_AUTOEXPOSURE_LEVEL3);
+			SCCB_WriteRegs(OV2640_AUTOEXPOSURE_LEVEL3);
 			break;
 		case 4:
-			SCCB_WriteRegs(TL2640_AUTOEXPOSURE_LEVEL4);
+			SCCB_WriteRegs(OV2640_AUTOEXPOSURE_LEVEL4);
 			break;
 		default:
-			SCCB_WriteRegs(TL2640_AUTOEXPOSURE_LEVEL0);
+			SCCB_WriteRegs(OV2640_AUTOEXPOSURE_LEVEL0);
 			break;
 	}
 
 }
 
 
-void TL2640_BrightnessConfig(unsigned char Brightness)
+void OV2640_BrightnessConfig(unsigned char Brightness)
 {
 	I2CRegWrite(SOC_I2C_0_REGS,0xff, 0x00);
 	I2CRegWrite(SOC_I2C_0_REGS,0x7c, 0x00);

@@ -22,7 +22,9 @@
  */
 #include <App.h>
 
+#include "PRULoader.h"
 #include "PRU_Code.h"
+#include "PRU_Data.h"
 
 /****************************************************************************/
 /*                                                                          */
@@ -40,13 +42,8 @@
 void LEDMatrixInit()
 {
     /* 使用 RISC 核心 PRU 控制 */
-    // 唤醒 PRU 核心
-    PSCModuleControl(SOC_PSC_0_REGS, HW_PSC_PRU, PSC_POWERDOMAIN_ALWAYS_ON, PSC_MDCTL_NEXT_ENABLE);
-
     // 加载并运行 PRU 程序
-    PruDisable(PRU_CORE0);
-
-    PruLoad(PRU_CORE0, (unsigned int*)PRU_Code, (sizeof(PRU_Code) / sizeof(unsigned int)));
-
-    PruRun(PRU_CORE0);
+    PRUEnable(PRU_CORE0);
+    PRULoad(PRU_CORE0, (unsigned int*)PRU_Code, (sizeof(PRU_Code) / sizeof(unsigned int)), (unsigned int*)PRU_Data, (sizeof(PRU_Data) / sizeof(unsigned int)));
+    PRURun(PRU_CORE0);
 }

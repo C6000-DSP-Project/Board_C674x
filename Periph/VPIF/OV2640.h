@@ -92,9 +92,9 @@
 #define OV2640_SENSOR_HISTO_LOW  0x61
 #define OV2640_SENSOR_HISTO_HIGH 0x62
 
-void TL2640_BrightnessConfig(unsigned char Brightness);
-void TL2640_AutoExposure(unsigned char level);
+void OV2640_BrightnessConfig(unsigned char Brightness);
+void OV2640_AutoExposure(unsigned char level);
 
-void TL2640Init(void);
-void TL2640Reset(void);
+void OV2640Init(void);
+void OV2640Reset(void);
 #endif

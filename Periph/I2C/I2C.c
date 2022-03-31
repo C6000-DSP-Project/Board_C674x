@@ -141,9 +141,8 @@ void I2CHWRegWrite(unsigned int baseAddr, unsigned short regAddr, unsigned char 
 unsigned char I2CRegRead(unsigned int baseAddr, unsigned char regAddr)
 {
     // 发送寄存器地址
-    I2CData[0] = regAddr >> 8;
-    I2CData[1] = regAddr & 0xFF;
-    I2CSendBlocking(baseAddr, 2);
+    I2CData[0] = regAddr;
+    I2CSendBlocking(baseAddr, 1);
 
     // 等待传输完成
     unsigned short i = 50000;
