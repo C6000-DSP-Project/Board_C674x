@@ -8,7 +8,7 @@ dvt/
 .launches/
 .settings/
 .config/
-src/
+BIOS/
 /Debug/
 Release/
 
