@@ -35,8 +35,8 @@ EVM-CKL138PKT 底板
 - RTC            串口终端设置 RTC 时间 运行「clock 或 hwclock -s 20220222 222222」年月日 时分秒
 - WIFI/BT 模块   使用 AT 指令建立连接 PC 需要将网络程序设置为防火墙例外或者关闭指定网络防火墙
                  下述命令需要在串口终端输入
-                 [ 1] wifi AT+GMR                                       # [可选] 获取模块版本信息
-                 [ 2] wifi AT                                           # [可选] 测试 AT 功能                                            
+                 [ 1] wifi AT+GMR                                       # [可选] 获取模块版本信息				 
+                 [ 2] wifi AT                                           # [可选] 测试 AT 功能
                  [ 3] wifi AT+CWMODE=1                                  # 设置模组进入 STA 模式
                  [ 4] wifi AT+CWJAP="GS-FHQ","gsdz2019"                 # 连接 WIFI SSID/密码
                  [ 5] wifi AT+CIPSTART="TCP","172.26.0.160",8080        # 连接 TCP 服务器 IP/端口
@@ -50,6 +50,10 @@ EVM-CKL138PKT 底板
 - EMIFA          暂不支持
 - M.2 USB        不支持
 - M.2 SATA       不支持
+
+模块
+
+- 点阵模块       使用 PRU 控制 DSP 加载 PRU 程序运行即可 
 
 程序固化
 - 程序镜像生成   使用 AISgen_d800k008.exe 上位机程序生成 ais 文件
