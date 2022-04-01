@@ -282,9 +282,10 @@ int Cmd_WIFI(int argc, char *argv[])
 tCmdLineEntry g_sCmdTable[] =
 {
     {"help",         Cmd_Help,       "\t\t - Display list of commands [help]"},
+    {"h",            Cmd_Help,       "\t\t - Display list of commands [help]"},
 
     {"led",          Cmd_LED,        "\t\t - LED control  [led+2/3/4/5+on/off]"},
-    {"spiflash",     Cmd_SPIFlash,   "\t - SPI Flash Test  [spiflash]"},
+    {"spiflash",     Cmd_SPIFlash,   "\t\t - SPI Flash Test  [spiflash]"},
     {"eeprom",       Cmd_EEPROM,     "\t\t - EEPROM Test  [eeprom]"},
 
     {"ddr2",         Cmd_DDR2,       "\t\t - DDR2 Test  [ddr2]"},

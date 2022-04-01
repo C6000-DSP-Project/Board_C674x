@@ -69,7 +69,6 @@ unsigned char rx_data[260];
 unsigned char *p_tx;
 unsigned char *p_rx;
 
-
 /****************************************************************************/
 /*                                                                          */
 /*              SPI 传输                                                    */
@@ -196,7 +195,7 @@ static void IsFlashBusy(void)
     do{
          StatusGet();
 
-      }while(rx_data[1] & WRITE_IN_PROGRESS);
+      } while(rx_data[1] & WRITE_IN_PROGRESS);
 }
 
 /****************************************************************************/
@@ -422,27 +421,7 @@ static Void HwiInit()
     EventCombiner_dispatchPlug(SYS_INT_SPI1_INT, &SPIHwi, 0, TRUE);
 }
 
-/****************************************************************************/
-/*                                                                          */
-/*              初始化                                                      */
-/*                                                                          */
-/****************************************************************************/
-void SPIFlashInit()
-{
-    // 使能外设
-    PSCModuleControl(SOC_PSC_1_REGS, HW_PSC_SPI1, PSC_POWERDOMAIN_ALWAYS_ON, PSC_MDCTL_NEXT_ENABLE);
-
-    // 管脚复用配置
-    GPIOBankPinMuxSet();
-
-    // SPI 初始化
-    SPIInit();
-
-    // 硬件中断线程初始化
-    HwiInit();
-}
-
-void SPIFlashTest(void)
+void SPIFlashTest()
 {
     SPIFlashInit();
 
@@ -462,7 +441,24 @@ void SPIFlashTest(void)
 
     // 数据校验
     VerifyData();
+}
 
-    // Touch
-    TouchInit();
+/****************************************************************************/
+/*                                                                          */
+/*              初始化                                                      */
+/*                                                                          */
+/****************************************************************************/
+void SPIFlashInit()
+{
+    // 使能外设
+    PSCModuleControl(SOC_PSC_1_REGS, HW_PSC_SPI1, PSC_POWERDOMAIN_ALWAYS_ON, PSC_MDCTL_NEXT_ENABLE);
+
+    // 管脚复用配置
+    GPIOBankPinMuxSet();
+
+    // SPI 初始化
+    SPIInit();
+
+    // 硬件中断线程初始化
+    HwiInit();
 }
