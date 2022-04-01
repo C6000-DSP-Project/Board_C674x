@@ -14,7 +14,7 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactExtension="out" artifactName="${ProjName}" buildProperties="" cleanCommand="${CG_CLEAN_CMD}" description="" errorParsers="org.eclipse.rtsc.xdctools.parsers.ErrorParser;com.ti.ccstudio.errorparser.CoffErrorParser;com.ti.ccstudio.errorparser.LinkErrorParser;com.ti.ccstudio.errorparser.AsmErrorParser;org.eclipse.cdt.core.GmakeErrorParser" id="com.ti.ccstudio.buildDefinitions.C6000.Debug.885615743" name="Debug" parent="com.ti.ccstudio.buildDefinitions.C6000.Debug" postbuildStep="del ${ProjName}.bin &amp;&amp; ${CG_TOOL_ROOT}/bin/strip6x -p -o ${ProjName}.bin ${ProjName}.out" prebuildStep="">
+				<configuration artifactExtension="out" artifactName="${ProjName}" buildProperties="" cleanCommand="${CG_CLEAN_CMD}" description="" errorParsers="org.eclipse.rtsc.xdctools.parsers.ErrorParser;com.ti.ccstudio.errorparser.CoffErrorParser;com.ti.ccstudio.errorparser.LinkErrorParser;com.ti.ccstudio.errorparser.AsmErrorParser;org.eclipse.cdt.core.GmakeErrorParser" id="com.ti.ccstudio.buildDefinitions.C6000.Debug.885615743" name="Debug" parent="com.ti.ccstudio.buildDefinitions.C6000.Debug" postbuildStep="del ${ProjName}.bin &amp;&amp; ${CG_TOOL_ROOT}/bin/strip6x -p -o ${ProjName}.bin ${ProjName}.out;../Tools/HexAIS_OMAP-L138.exe -ini ../Tools/SPI_FLASH.ini -o ${ProjName}.ais ${ProjName}.out;" prebuildStep="">
 					<folderInfo id="com.ti.ccstudio.buildDefinitions.C6000.Debug.885615743." name="/" resourcePath="">
 						<toolChain id="com.ti.ccstudio.buildDefinitions.C6000_8.3.exe.DebugToolchain.31941147" name="TI Build Tools" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.exe.DebugToolchain" targetTool="com.ti.ccstudio.buildDefinitions.C6000_8.3.exe.linkerDebug.1667597729">
 							<option id="com.ti.ccstudio.buildDefinitions.core.OPT_TAGS.156150041" superClass="com.ti.ccstudio.buildDefinitions.core.OPT_TAGS" valueType="stringList">
@@ -141,7 +141,7 @@
 						</tool>
 					</fileInfo>
 					<sourceEntries>
-						<entry excluding="Platform|BIOS|Periph/USB_DEV_MSC/sysdelay.c|Periph/USB_DEV_MSC|Periph/USB_DEV_MSC/delay.c|Periph/LCD1.c|Platform/tl/dsp/evm6748/package/build.cfg" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Tools|Platform|BIOS|Periph/USB_DEV_MSC/sysdelay.c|Periph/USB_DEV_MSC|Periph/USB_DEV_MSC/delay.c|Periph/LCD1.c|Platform/tl/dsp/evm6748/package/build.cfg" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
