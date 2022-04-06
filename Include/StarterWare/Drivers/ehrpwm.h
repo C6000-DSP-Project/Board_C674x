@@ -162,7 +162,7 @@ extern "C" {
 
 
 
-typedef char bool;
+// typedef char bool;
 
 //**********************************************************************
 //  API FUNCTION PROTOTYPES

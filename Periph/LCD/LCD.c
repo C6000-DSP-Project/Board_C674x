@@ -30,20 +30,14 @@
 /*                                                                          */
 /****************************************************************************/
 #pragma DATA_ALIGN(g_pucBuffer, 4);
-unsigned char g_pucBuffer[GrOffScreen16BPPSize(LCD_WIDTH, LCD_HEIGHT)];
-
-// 图形库显示结构
-tDisplay g_s800x480x16Display;
+unsigned char g_pucBuffer[4 + (16 * 2) + (LCD_WIDTH * LCD_HEIGHT *2)];
 
 // 调色板
-unsigned short palette_32b[PALETTE_SIZE/2] =
+unsigned short palette_32b[PALETTE_SIZE / 2] =
 {
     0x4000u, 0x0000u, 0x0000u, 0x0000u, 0x0000u, 0x0000u, 0x0000u, 0x0000u,
-	0x0000u, 0x0000u, 0x0000u, 0x0000u, 0x0000u, 0x0000u, 0x0000u, 0x0000u
+    0x0000u, 0x0000u, 0x0000u, 0x0000u, 0x0000u, 0x0000u, 0x0000u, 0x0000u
 };
-
-// 全局显示上下文
-tContext g_sContext;
 
 /****************************************************************************/
 /*                                                                          */
@@ -161,6 +155,9 @@ Void LCDHwi(UArg arg)
     }
 
     status = RasterClearGetIntStatus(SOC_LCDC_0_REGS, status);
+
+    // 更新缓存
+ //   Cache_wbInv(&g_pucBuffer, 4 + (16 * 2) + (LCD_WIDTH * LCD_HEIGHT * 2), Cache_Type_ALLD, true);
 }
 
 static Void HwiInit()
@@ -181,109 +178,104 @@ static Void HwiInit()
 /****************************************************************************/
 Void LCDTask(UArg a0, UArg a1)
 {
-    // 关闭背光
-    LCDBacklightDisable();
-
-    // 背景图
-    GrImageDraw(&g_sContext, image, 0, 0);
-
-    // 显示静态文本
-    GrContextFontSet(&g_sContext, TEXT_FONT);
-    GrContextForegroundSet(&g_sContext, ClrWhite);
-    GrStringDraw(&g_sContext, "corekernel.net/.org/.cn", -1, 525, 400, false);
-    GrStringDraw(&g_sContext, "fpga.net.cn", -1, 525, 425, false);
-
-    // 打开背光
-    LCDBacklightEnable();
-
-    // 设置文字背景
-    GrContextBackgroundSet(&g_sContext, ClrWhite);
-
-    char str[64];
-
-    char *WeekDayStr[64] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
-
-    float t, rh;
-    char deg[] = {0xA1, 0xE3, 0};
-
-    for(;;)
-    {
-        // 背景图
-//      GrImageDraw(&g_sContext, image, 0, 0);
-
-        // 显示时间
-        GrContextForegroundSet(&g_sContext, ClrSteelBlue);
-
-        sprintf(str, "%04d/%02d/%02d %s %02d:%02d:%02d", RTCTime.tm_year + 1920, RTCTime.tm_mon, RTCTime.tm_mday, WeekDayStr[RTCTime.tm_wday],
-                                                          RTCTime.tm_hour, RTCTime.tm_min, RTCTime.tm_sec);
-        GrStringDraw(&g_sContext, str, -1, 525, 25, true);
-
-        // 触摸信息
-        GrContextForegroundSet(&g_sContext, ClrSteelBlue);
-        sprintf(str, "%d Point Touch", TouchInfo.Num);
-        GrStringDraw(&g_sContext, str, -1, 525, 50, true);
-
-        sprintf(str, "X0 %3d Y0 %3d", TouchInfo.X[0], TouchInfo.Y[0]);
-        GrStringDraw(&g_sContext, str, -1, 525, 75, true);
-
-        sprintf(str, "X1 %3d Y1 %3d", TouchInfo.X[1], TouchInfo.Y[1]);
-        GrStringDraw(&g_sContext, str, -1, 525, 100, true);
-
-        sprintf(str, "X2 %3d Y2 %3d", TouchInfo.X[2], TouchInfo.Y[2]);
-        GrStringDraw(&g_sContext, str, -1, 525, 125, true);
-
-        sprintf(str, "X3 %3d Y3 %3d", TouchInfo.X[3], TouchInfo.Y[3]);
-        GrStringDraw(&g_sContext, str, -1, 525, 150, true);
-
-        sprintf(str, "X4 %3d Y4 %3d", TouchInfo.X[4], TouchInfo.Y[4]);
-        GrStringDraw(&g_sContext, str, -1, 525, 175, true);
-
-        // 温度/湿度
-        TempSensorGet(&t, &rh);
-        sprintf(str, "Temperature %2.2f%sC", t, deg);
-        GrStringDraw(&g_sContext, str, -1, 25, 175, true);
-
-        sprintf(str, "Humidity %2.2f%%", rh);
-        GrStringDraw(&g_sContext, str, -1, 25, 200, true);
-
-        // CPU 频率
-        GrContextForegroundSet(&g_sContext, ClrBlack);
-
-        PLLClockGet();
-
-        sprintf(str, "DSP/ARM %dMHz", pllcfg.PLL0_SYSCLK1);
-        GrStringDraw(&g_sContext, str, -1, 25, 250, false);
-
-        sprintf(str, "DDR2 %dMT/s", pllcfg.PLL1_SYSCLK1);
-        GrStringDraw(&g_sContext, str, -1, 25, 275, false);
-
-        // 启动模式
-        BootModeGet();
-        sprintf(str, "Boot From %s", BootModeStr[BootMode]);
-        GrStringDraw(&g_sContext, str, -1, 25, 300, false);
-
-        // MAC/IP 地址
-        GrContextForegroundSet(&g_sContext, ClrSteelBlue);
-
-        sprintf(str, "%02X-%02X-%02X-%02X-%02X-%02X", MacAddr[0], MacAddr[1], MacAddr[2], MacAddr[3], MacAddr[4], MacAddr[5]);
-        GrStringDraw(&g_sContext, str, -1, 25, 350, true);
-
-        sprintf(str, "%s", StrIP);
-        GrStringDraw(&g_sContext, str, -1, 25, 375, true);
-
-        // 显示 CPU 负载
-        GrContextForegroundSet(&g_sContext, ClrSteelBlue);
-
-        sprintf(str, "CPU Load %2d%%", Load_getCPULoad());
-        GrStringDraw(&g_sContext, str, -1, 25, 425, true);
-
-        Task_sleep(1000);
-    }
-}
-
-static Void TaskInit()
-{
-    Task_create(LCDTask, NULL, NULL);
+//    // 关闭背光
+//    LCDBacklightDisable();
+//
+//    // 背景图
+//    GrImageDraw(&g_sContext, image, 0, 0);
+//
+//    // 显示静态文本
+//    GrContextFontSet(&g_sContext, TEXT_FONT);
+//    GrContextForegroundSet(&g_sContext, ClrWhite);
+//    GrStringDraw(&g_sContext, "corekernel.net/.org/.cn", -1, 525, 400, false);
+//    GrStringDraw(&g_sContext, "fpga.net.cn", -1, 525, 425, false);
+//
+//    // 打开背光
+//    LCDBacklightEnable();
+//
+//    // 设置文字背景
+//    GrContextBackgroundSet(&g_sContext, ClrWhite);
+//
+//    char str[64];
+//
+//    char *WeekDayStr[64] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+//
+//    float t, rh;
+//    char deg[] = {0xA1, 0xE3, 0};
+//
+//    for(;;)
+//    {
+//        // 背景图
+////      GrImageDraw(&g_sContext, image, 0, 0);
+//
+//        // 显示时间
+//        GrContextForegroundSet(&g_sContext, ClrSteelBlue);
+//
+//        sprintf(str, "%04d/%02d/%02d %s %02d:%02d:%02d", RTCTime.tm_year + 1920, RTCTime.tm_mon, RTCTime.tm_mday, WeekDayStr[RTCTime.tm_wday],
+//                                                          RTCTime.tm_hour, RTCTime.tm_min, RTCTime.tm_sec);
+//        GrStringDraw(&g_sContext, str, -1, 525, 25, true);
+//
+//        // 触摸信息
+//        GrContextForegroundSet(&g_sContext, ClrSteelBlue);
+//        sprintf(str, "%d Point Touch", TouchInfo.Num);
+//        GrStringDraw(&g_sContext, str, -1, 525, 50, true);
+//
+//        sprintf(str, "X0 %3d Y0 %3d", TouchInfo.X[0], TouchInfo.Y[0]);
+//        GrStringDraw(&g_sContext, str, -1, 525, 75, true);
+//
+//        sprintf(str, "X1 %3d Y1 %3d", TouchInfo.X[1], TouchInfo.Y[1]);
+//        GrStringDraw(&g_sContext, str, -1, 525, 100, true);
+//
+//        sprintf(str, "X2 %3d Y2 %3d", TouchInfo.X[2], TouchInfo.Y[2]);
+//        GrStringDraw(&g_sContext, str, -1, 525, 125, true);
+//
+//        sprintf(str, "X3 %3d Y3 %3d", TouchInfo.X[3], TouchInfo.Y[3]);
+//        GrStringDraw(&g_sContext, str, -1, 525, 150, true);
+//
+//        sprintf(str, "X4 %3d Y4 %3d", TouchInfo.X[4], TouchInfo.Y[4]);
+//        GrStringDraw(&g_sContext, str, -1, 525, 175, true);
+//
+//        // 温度/湿度
+//        TempSensorGet(&t, &rh);
+//        sprintf(str, "Temperature %2.2f%sC", t, deg);
+//        GrStringDraw(&g_sContext, str, -1, 25, 175, true);
+//
+//        sprintf(str, "Humidity %2.2f%%", rh);
+//        GrStringDraw(&g_sContext, str, -1, 25, 200, true);
+//
+//        // CPU 频率
+//        GrContextForegroundSet(&g_sContext, ClrBlack);
+//
+//        PLLClockGet();
+//
+//        sprintf(str, "DSP/ARM %dMHz", pllcfg.PLL0_SYSCLK1);
+//        GrStringDraw(&g_sContext, str, -1, 25, 250, false);
+//
+//        sprintf(str, "DDR2 %dMT/s", pllcfg.PLL1_SYSCLK1);
+//        GrStringDraw(&g_sContext, str, -1, 25, 275, false);
+//
+//        // 启动模式
+//        BootModeGet();
+//        sprintf(str, "Boot From %s", BootModeStr[BootMode]);
+//        GrStringDraw(&g_sContext, str, -1, 25, 300, false);
+//
+//        // MAC/IP 地址
+//        GrContextForegroundSet(&g_sContext, ClrSteelBlue);
+//
+//        sprintf(str, "%02X-%02X-%02X-%02X-%02X-%02X", MacAddr[0], MacAddr[1], MacAddr[2], MacAddr[3], MacAddr[4], MacAddr[5]);
+//        GrStringDraw(&g_sContext, str, -1, 25, 350, true);
+//
+//        sprintf(str, "%s", StrIP);
+//        GrStringDraw(&g_sContext, str, -1, 25, 375, true);
+//
+//        // 显示 CPU 负载
+//        GrContextForegroundSet(&g_sContext, ClrSteelBlue);
+//
+//        sprintf(str, "CPU Load %2d%%", Load_getCPULoad());
+//        GrStringDraw(&g_sContext, str, -1, 25, 425, true);
+//
+//        Task_sleep(1000);
+//    }
 }
 
 /****************************************************************************/
@@ -320,13 +312,10 @@ void LCDInit()
     RasterClkConfig(SOC_LCDC_0_REGS, 30000000, LCD_CLK);
 
     // 配置 LCD DMA 控制器
-    RasterDMAConfig(SOC_LCDC_0_REGS, RASTER_DOUBLE_FRAME_BUFFER,
-                    RASTER_BURST_SIZE_16, RASTER_FIFO_THRESHOLD_8,
-                    RASTER_BIG_ENDIAN_DISABLE);
+    RasterDMAConfig(SOC_LCDC_0_REGS, RASTER_DOUBLE_FRAME_BUFFER, RASTER_BURST_SIZE_16, RASTER_FIFO_THRESHOLD_8, RASTER_BIG_ENDIAN_DISABLE);
 
     // 模式配置(例如:TFT 或者 STN,彩色或者黑白 等等)
-    RasterModeConfig(SOC_LCDC_0_REGS, RASTER_DISPLAY_MODE_TFT,
-                     RASTER_PALETTE_DATA, RASTER_COLOR, RASTER_RIGHT_ALIGNED);
+    RasterModeConfig(SOC_LCDC_0_REGS, RASTER_DISPLAY_MODE_TFT, RASTER_PALETTE_DATA, RASTER_COLOR, RASTER_RIGHT_ALIGNED);
 
     // 帧缓存数据以 LSB 方式排列
     RasterLSBDataOrderSelect(SOC_LCDC_0_REGS);
@@ -335,12 +324,7 @@ void LCDInit()
     RasterNibbleModeDisable(SOC_LCDC_0_REGS);
    
     // 配置光栅控制器极性
-    RasterTiming2Configure(SOC_LCDC_0_REGS, RASTER_FRAME_CLOCK_LOW  |
-                                            RASTER_LINE_CLOCK_LOW   |
-                                            RASTER_PIXEL_CLOCK_HIGH |
-                                            RASTER_SYNC_EDGE_RISING |
-                                            RASTER_SYNC_CTRL_ACTIVE |
-                                            RASTER_AC_BIAS_HIGH, 0, 255);
+    RasterTiming2Configure(SOC_LCDC_0_REGS, RASTER_FRAME_CLOCK_LOW | RASTER_LINE_CLOCK_LOW | RASTER_PIXEL_CLOCK_HIGH | RASTER_SYNC_EDGE_RISING | RASTER_SYNC_CTRL_ACTIVE | RASTER_AC_BIAS_HIGH, 0, 255);
 
     // 配置水平 / 垂直参数
     RasterHparamConfig(SOC_LCDC_0_REGS, 800, 30, 210, 45);
@@ -349,44 +333,27 @@ void LCDInit()
     // 配置 FIFO DMA 延时
     RasterFIFODMADelayConfig(SOC_LCDC_0_REGS, 2);
 
+    // 配置显存
+    RasterDMAFBConfig(SOC_LCDC_0_REGS, (unsigned int)(g_pucBuffer+PALETTE_OFFSET), (unsigned int)(g_pucBuffer+PALETTE_OFFSET) + sizeof(g_pucBuffer) - 2 - PALETTE_OFFSET, 0);
+    RasterDMAFBConfig(SOC_LCDC_0_REGS, (unsigned int)(g_pucBuffer+PALETTE_OFFSET), (unsigned int)(g_pucBuffer+PALETTE_OFFSET) + sizeof(g_pucBuffer) - 2 - PALETTE_OFFSET, 1);
+
+    // 复制调色板到离屏显存中
+    unsigned char *src, *dst;
     unsigned int i = 0;
-    unsigned char *src, *dest;
 
-    Cache_setMar(g_pucBuffer,sizeof(g_pucBuffer+PALETTE_OFFSET), Cache_Mar_DISABLE);
-
-    // 配置基本框架
-    RasterDMAFBConfig(SOC_LCDC_0_REGS,
-                      (unsigned int)(g_pucBuffer + PALETTE_OFFSET),
-                      (unsigned int)(g_pucBuffer + PALETTE_OFFSET) + sizeof(g_pucBuffer) - 2 - PALETTE_OFFSET,
-                      0);
-
-    RasterDMAFBConfig(SOC_LCDC_0_REGS,
-                      (unsigned int)(g_pucBuffer + PALETTE_OFFSET),
-                      (unsigned int)(g_pucBuffer + PALETTE_OFFSET) + sizeof(g_pucBuffer) - 2 - PALETTE_OFFSET,
-                      1);
-
-    // 拷贝调色板到离屏显存中
     src = (unsigned char *)palette_32b;
-    dest = (unsigned char *)(g_pucBuffer + PALETTE_OFFSET);
+    dst = (unsigned char *)(g_pucBuffer + PALETTE_OFFSET);
+
     for(i = 4; i < (PALETTE_SIZE + 4); i++)
     {
-        *dest++ = *src++;
+        *dst++ = *src++;
     }
 
-    // 初始化离屏显存
-    GrOffScreen16BPPInit(&g_s800x480x16Display, g_pucBuffer, LCD_WIDTH, LCD_HEIGHT);
-
-    // 初始化显存上下文.
-    GrContextInit(&g_sContext, &g_s800x480x16Display);
-
-    // 使能LCD帧结束中断
+    // 使能 LCD 帧结束中断
     RasterEndOfFrameIntEnable(SOC_LCDC_0_REGS);
 
     RasterIntEnable(SOC_LCDC_0_REGS, RASTER_END_OF_FRAME0_INT | RASTER_END_OF_FRAME1_INT);
 
     // 使能光栅
     RasterEnable(SOC_LCDC_0_REGS);
-
-    // 任务线程初始化
-    TaskInit();
 }

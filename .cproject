@@ -44,7 +44,7 @@
 									<listOptionValue builtIn="false" value="${NSP_SYMBOLS}"/>
 									<listOptionValue builtIn="false" value="${NDK_SYMBOLS}"/>
 									<listOptionValue builtIn="false" value="c6748"/>
-									<listOptionValue builtIn="false" value="DMA_MODE"/>
+									<listOptionValue builtIn="false" value="LV_CONF_INCLUDE_SIMPLE"/>
 								</option>
 								<option id="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.ABI.18959691" name="Application binary interface (coffabi not supported) (--abi)" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.ABI" value="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.ABI.eabi" valueType="enumerated"/>
 								<option id="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.OPT_LEVEL.357254838" name="Optimization level (--opt_level, -O)" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.OPT_LEVEL" value="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.OPT_LEVEL.off" valueType="enumerated"/>
@@ -55,12 +55,6 @@
 									<listOptionValue builtIn="false" value="${NSP_INCLUDE_PATH}"/>
 									<listOptionValue builtIn="false" value="${NDK_INCLUDE_PATH}"/>
 									<listOptionValue builtIn="false" value="${CG_TOOL_ROOT}/include"/>
-									<listOptionValue builtIn="false" value="../"/>
-									<listOptionValue builtIn="false" value="../Periph"/>
-									<listOptionValue builtIn="false" value="../Include/StarterWare/grlib"/>
-									<listOptionValue builtIn="false" value="../Include/StarterWare/Drivers"/>
-									<listOptionValue builtIn="false" value="../Include/StarterWare/Drivers/hw"/>
-									<listOptionValue builtIn="false" value="../Include/StarterWare/Drivers/c674x/c6748"/>
 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Include/DSPLib"/>
 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Include/IMGLib"/>
 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Include/MathLib"/>
@@ -68,6 +62,12 @@
 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/Network"/>
 									<listOptionValue builtIn="false" value="${NDK_INSTALL_DIR}/packages/ti/ndk/inc"/>
 									<listOptionValue builtIn="false" value="${NDK_INSTALL_DIR}/packages/ti/ndk/inc/tools"/>
+									<listOptionValue builtIn="false" value="../"/>
+									<listOptionValue builtIn="false" value="../Periph"/>
+									<listOptionValue builtIn="false" value="../LVGL"/>
+									<listOptionValue builtIn="false" value="../Include/StarterWare/Drivers"/>
+									<listOptionValue builtIn="false" value="../Include/StarterWare/Drivers/hw"/>
+									<listOptionValue builtIn="false" value="../Include/StarterWare/Drivers/c674x/c6748"/>
 								</option>
 								<option id="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.GCC.2102391822" name="Enable support for GCC extensions (DEPRECATED) (--gcc)" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.GCC" value="true" valueType="boolean"/>
 								<option id="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.DIAG_WRAP.2097116861" name="Wrap diagnostic messages (--diag_wrap)" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.DIAG_WRAP" value="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.DIAG_WRAP.off" valueType="enumerated"/>
@@ -79,6 +79,7 @@
 								<option id="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.ENTRY_PARM.962866937" name="Pass caller's name or address to entry hook (--entry_parm)" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.ENTRY_PARM" value="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.ENTRY_PARM.address" valueType="enumerated"/>
 								<option id="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.EXIT_HOOK.475364280" name="Insert this call at exit from each function (--exit_hook)" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.EXIT_HOOK" value="FunEntryHook" valueType="string"/>
 								<option id="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.EXIT_PARM.1957723366" name="Pass caller's name or address to exit hook (--exit_parm)" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.EXIT_PARM" value="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.EXIT_PARM.address" valueType="enumerated"/>
+								<option id="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.DIAG_SUPPRESS.333589812" name="Suppress diagnostic &lt;id&gt; (--diag_suppress, -pds)" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.DIAG_SUPPRESS" valueType="stringList"/>
 								<inputType id="com.ti.ccstudio.buildDefinitions.C6000_8.3.compiler.inputType__C_SRCS.113255571" name="C Sources" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.compiler.inputType__C_SRCS"/>
 								<inputType id="com.ti.ccstudio.buildDefinitions.C6000_8.3.compiler.inputType__CPP_SRCS.1239739108" name="C++ Sources" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.compiler.inputType__CPP_SRCS"/>
 								<inputType id="com.ti.ccstudio.buildDefinitions.C6000_8.3.compiler.inputType__ASM_SRCS.290947477" name="Assembly Sources" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.compiler.inputType__ASM_SRCS"/>
@@ -94,9 +95,8 @@
 									<listOptionValue builtIn="false" value="${BIOS_LIBRARIES}"/>
 									<listOptionValue builtIn="false" value="${NSP_LIBRARIES}"/>
 									<listOptionValue builtIn="false" value="${NDK_LIBRARIES}"/>
-									<listOptionValue builtIn="false" value="../Library/StarterWare/Drivers/drivers.lib"/>
-									<listOptionValue builtIn="false" value="../Library/StarterWare/grlib/grlib.lib"/>
 									<listOptionValue builtIn="false" value="libc.a"/>
+									<listOptionValue builtIn="false" value="../Library/StarterWare/Drivers/drivers.lib"/>
 								</option>
 								<option id="com.ti.ccstudio.buildDefinitions.C6000_8.3.linkerID.SEARCH_PATH.1180026382" name="Add &lt;dir&gt; to library search path (--search_path, -i)" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.linkerID.SEARCH_PATH" valueType="libPaths">
 									<listOptionValue builtIn="false" value="${COM_TI_UIA_LIBRARY_PATH}"/>
@@ -140,8 +140,33 @@
 							<outputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.outputtype.1539800106.291158906.1335379094.1382123307.1360912081" name="Resource Custom Build Step Output Type"/>
 						</tool>
 					</fileInfo>
+					<folderInfo id="com.ti.ccstudio.buildDefinitions.C6000.Debug.885615743.1900266163" name="/" resourcePath="LVGL">
+						<toolChain id="com.ti.ccstudio.buildDefinitions.C6000_8.3.exe.DebugToolchain.1248915590" name="TI Build Tools" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.exe.DebugToolchain" unusedChildren="">
+							<option id="com.ti.ccstudio.buildDefinitions.core.OPT_TAGS.156150041.1999692936" superClass="com.ti.ccstudio.buildDefinitions.core.OPT_TAGS.156150041"/>
+							<option id="com.ti.ccstudio.buildDefinitions.core.OPT_CODEGEN_VERSION.1042324944.1730359357" name="Compiler version" superClass="com.ti.ccstudio.buildDefinitions.core.OPT_CODEGEN_VERSION.1042324944"/>
+							<targetPlatform id="com.ti.ccstudio.buildDefinitions.C6000_8.3.exe.targetPlatformDebug" name="Platform" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.exe.targetPlatformDebug"/>
+							<tool id="com.ti.ccstudio.buildDefinitions.C6000_8.3.exe.compilerDebug.834956342" name="C6000 Compiler" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.exe.compilerDebug.62125151">
+								<option id="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.C_DIALECT.640175435" name="C Dialect" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.C_DIALECT" value="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.C_DIALECT.C99" valueType="enumerated"/>
+								<option id="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.DIAG_SUPPRESS.1920974434" name="Suppress diagnostic &lt;id&gt; (--diag_suppress, -pds)" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.DIAG_SUPPRESS" valueType="stringList">
+									<listOptionValue builtIn="false" value="1"/>
+									<listOptionValue builtIn="false" value="69"/>
+									<listOptionValue builtIn="false" value="112"/>
+									<listOptionValue builtIn="false" value="190"/>
+									<listOptionValue builtIn="false" value="238"/>
+									<listOptionValue builtIn="false" value="548"/>
+								</option>
+								<inputType id="com.ti.ccstudio.buildDefinitions.C6000_8.3.compiler.inputType__C_SRCS.37693144" name="C Sources" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.compiler.inputType__C_SRCS"/>
+								<inputType id="com.ti.ccstudio.buildDefinitions.C6000_8.3.compiler.inputType__CPP_SRCS.1453012402" name="C++ Sources" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.compiler.inputType__CPP_SRCS"/>
+								<inputType id="com.ti.ccstudio.buildDefinitions.C6000_8.3.compiler.inputType__ASM_SRCS.1458990448" name="Assembly Sources" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.compiler.inputType__ASM_SRCS"/>
+								<inputType id="com.ti.ccstudio.buildDefinitions.C6000_8.3.compiler.inputType__ASM2_SRCS.1728423183" name="Assembly Sources" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.compiler.inputType__ASM2_SRCS"/>
+							</tool>
+							<tool id="com.ti.ccstudio.buildDefinitions.C6000_8.3.exe.linkerDebug.421666277" name="C6000 Linker" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.exe.linkerDebug.1667597729"/>
+							<tool id="com.ti.ccstudio.buildDefinitions.C6000_8.3.hex.381925949" name="C6000 Hex Utility" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.hex.1831528872"/>
+							<tool id="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.225618238" name="XDCtools" superClass="com.ti.rtsc.buildDefinitions.XDC_3.16.tool.399879611"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
-						<entry excluding="Tools|Platform|BIOS|Periph/USB_DEV_MSC/sysdelay.c|Periph/USB_DEV_MSC|Periph/USB_DEV_MSC/delay.c|Periph/LCD1.c|Platform/tl/dsp/evm6748/package/build.cfg" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Periph/USB_DEV_MSC/sysdelay.c|BIOS|Periph/USB_DEV_MSC|Periph/USB_DEV_MSC/delay.c|Periph/LCD1.c|Platform/tl/dsp/evm6748/package/build.cfg|Platform|Tools" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -239,7 +264,7 @@
 						</tool>
 					</fileInfo>
 					<sourceEntries>
-						<entry excluding="Local.cfg|BIOS" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="BIOS|Local.cfg" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

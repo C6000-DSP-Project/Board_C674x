@@ -81,8 +81,8 @@ void CacheInit()
     Cache_Size cacheSize;
 
     cacheSize.l1pSize = Cache_L1Size_32K;
-    cacheSize.l1dSize = Cache_L1Size_32K;
-    cacheSize.l2Size  = Cache_L2Size_128K;
+    cacheSize.l1dSize = Cache_L1Size_0K;
+    cacheSize.l2Size  = Cache_L2Size_0K;
 
     Cache_setSize(&cacheSize);
 
@@ -135,6 +135,10 @@ Void HardwareInit()
 
     // ´¥ÃþÆÁ
     TouchInit();
+
+    // LVGL Í¼ÐÎ¿â
+    lv_init();
+    lv_port_disp_init();
 
     // [PRU ºËÐÄ] LED µãÕóÄ£¿é
     LEDMatrixInit();
