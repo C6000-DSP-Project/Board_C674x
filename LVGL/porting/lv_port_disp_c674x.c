@@ -39,7 +39,8 @@
 /*                                                                          */
 /****************************************************************************/
 static void disp_init(void);
-static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_t * color_p);
+static void disp_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area, lv_color_t *color_p);
+static void disp_monitor_cb(lv_disp_drv_t *disp_drv, uint32_t time, uint32_t px);
 
 /****************************************************************************/
 /*                                                                          */
@@ -116,14 +117,15 @@ void lv_port_disp_init(void)
     disp_drv.hor_res = LCD_WIDTH;
     disp_drv.ver_res = LCD_HEIGHT;
 
-    /* 复制显示数据到显示控制器 */
+    /* 回调函数 */
     disp_drv.flush_cb = disp_flush;
+    disp_drv.monitor_cb = disp_monitor_cb;
 
     /* 配置显示缓冲区 */
     disp_drv.draw_buf = &draw_buf_dsc;
 
     /* 强制全屏刷新 */
-    //disp_drv.full_refresh = 1
+    //disp_drv.full_refresh = 1;
 
     /* 注册驱动 */
     lv_disp_drv_register(&disp_drv);
@@ -159,7 +161,7 @@ static void disp_init(void)
 /*              更新显示                                                    */
 /*                                                                          */
 /****************************************************************************/
-static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_t * color_p)
+static void disp_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area, lv_color_t *color_p)
 {
     int32_t x;
     int32_t y;
@@ -178,6 +180,17 @@ static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_colo
     /* 重要!!!
      * 通知图形库显示更新就绪 */
     lv_disp_flush_ready(disp_drv);
+}
+
+/****************************************************************************/
+/*                                                                          */
+/*              更新显示                                                    */
+/*                                                                          */
+/****************************************************************************/
+void disp_monitor_cb(lv_disp_drv_t *disp_drv, uint32_t time, uint32_t px)
+{
+    /* 维护缓存一致性 */
+    Cache_wbInvAll();
 }
 
 #else /*Enable this file at the top*/

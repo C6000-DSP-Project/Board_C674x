@@ -155,9 +155,6 @@ Void LCDHwi(UArg arg)
     }
 
     status = RasterClearGetIntStatus(SOC_LCDC_0_REGS, status);
-
-    // 更新缓存
- //   Cache_wbInv(&g_pucBuffer, 4 + (16 * 2) + (LCD_WIDTH * LCD_HEIGHT * 2), Cache_Type_ALLD, true);
 }
 
 static Void HwiInit()
@@ -334,8 +331,8 @@ void LCDInit()
     RasterFIFODMADelayConfig(SOC_LCDC_0_REGS, 2);
 
     // 配置显存
-    RasterDMAFBConfig(SOC_LCDC_0_REGS, (unsigned int)(g_pucBuffer+PALETTE_OFFSET), (unsigned int)(g_pucBuffer+PALETTE_OFFSET) + sizeof(g_pucBuffer) - 2 - PALETTE_OFFSET, 0);
-    RasterDMAFBConfig(SOC_LCDC_0_REGS, (unsigned int)(g_pucBuffer+PALETTE_OFFSET), (unsigned int)(g_pucBuffer+PALETTE_OFFSET) + sizeof(g_pucBuffer) - 2 - PALETTE_OFFSET, 1);
+    RasterDMAFBConfig(SOC_LCDC_0_REGS, (unsigned int)(g_pucBuffer + PALETTE_OFFSET), (unsigned int)(g_pucBuffer + PALETTE_OFFSET) + sizeof(g_pucBuffer) - 2 - PALETTE_OFFSET, 0);
+    RasterDMAFBConfig(SOC_LCDC_0_REGS, (unsigned int)(g_pucBuffer + PALETTE_OFFSET), (unsigned int)(g_pucBuffer + PALETTE_OFFSET) + sizeof(g_pucBuffer) - 2 - PALETTE_OFFSET, 1);
 
     // 复制调色板到离屏显存中
     unsigned char *src, *dst;
@@ -351,7 +348,6 @@ void LCDInit()
 
     // 使能 LCD 帧结束中断
     RasterEndOfFrameIntEnable(SOC_LCDC_0_REGS);
-
     RasterIntEnable(SOC_LCDC_0_REGS, RASTER_END_OF_FRAME0_INT | RASTER_END_OF_FRAME1_INT);
 
     // 使能光栅
