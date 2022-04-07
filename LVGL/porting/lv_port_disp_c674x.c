@@ -53,9 +53,16 @@ Void LVGLTick(UArg arg)
     lv_tick_inc(1);
 }
 
+extern void UARTprintf(const char *fmt, ...);
+
 Void LVGLTask(UArg a0, UArg a1)
 {
-    lv_example_get_started_1();
+    lv_log_register_print_cb(UARTprintf);
+
+//    lv_example_get_started_1();
+    lv_example_keyboard_1();
+//    lv_demo_benchmark();
+//    lv_demo_music();
 
     for(;;)
     {
@@ -127,6 +134,10 @@ void lv_port_disp_init(void)
     /* 强制全屏刷新 */
     //disp_drv.full_refresh = 1;
 
+    /* 旋转 */
+    //disp_drv.rotated = LV_DISP_ROT_180;
+
+
     /* 注册驱动 */
     lv_disp_drv_register(&disp_drv);
 }
@@ -158,7 +169,7 @@ static void disp_init(void)
 
 /****************************************************************************/
 /*                                                                          */
-/*              更新显示                                                    */
+/*              回调函数                                                    */
 /*                                                                          */
 /****************************************************************************/
 static void disp_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area, lv_color_t *color_p)
@@ -182,11 +193,6 @@ static void disp_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area, lv_color_
     lv_disp_flush_ready(disp_drv);
 }
 
-/****************************************************************************/
-/*                                                                          */
-/*              更新显示                                                    */
-/*                                                                          */
-/****************************************************************************/
 void disp_monitor_cb(lv_disp_drv_t *disp_drv, uint32_t time, uint32_t px)
 {
     /* 维护缓存一致性 */

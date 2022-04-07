@@ -173,14 +173,12 @@ LV_ATTRIBUTE_FAST_MEM void lv_draw_sw_img_decoded(struct _lv_draw_ctx_t * draw_c
 
                 _lv_img_buf_transform_init(&trans_dsc);
             }
-            else
-#endif
-            {
+            else {
                 src_buf_tmp = src_buf;
                 src_buf_tmp += src_stride * (draw_area.y1 - coords->y1) * px_size_byte;
                 src_buf_tmp += (draw_area.x1 - coords->x1) * px_size_byte;
             }
-
+#endif
             uint16_t recolor_premult[3] = {0};
             lv_opa_t recolor_opa_inv = 255 - draw_dsc->recolor_opa;
             if(draw_dsc->recolor_opa != 0) {

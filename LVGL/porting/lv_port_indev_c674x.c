@@ -1,55 +1,37 @@
-/**
- * @file lv_port_indev_templ.c
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//
+//    新核科技(广州)有限公司
+//
+//    Copyright (C) 2022 CoreKernel Technology (Guangzhou) Co., Ltd
+//
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//
+//    LVGL 输入设备 DSP C6748 底层接口移植
+//
+//    2022年04月07日
+//
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+/*
+ *    - 希望缄默(bin wang)
+ *    - bin@corekernel.net
+ *
+ *    官网 corekernel.net/.org/.cn
+ *    社区 fpga.net.cn
  *
  */
+#if 1
 
-/*Copy this file as "lv_port_indev.c" and set this value to "1" to enable content*/
-#if 0
+#include "lv_port_indev_c674x.h"
+#include "../lvgl.h"
 
-/*********************
- *      INCLUDES
- *********************/
-#include "lv_port_indev_template.h"
-#include "../../lvgl.h"
+#include <App.h>
 
-/*********************
- *      DEFINES
- *********************/
-
-/**********************
- *      TYPEDEFS
- **********************/
-
-/**********************
- *  STATIC PROTOTYPES
- **********************/
-
-static void touchpad_init(void);
-static void touchpad_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data);
-static bool touchpad_is_pressed(void);
-static void touchpad_get_xy(lv_coord_t * x, lv_coord_t * y);
-
-static void mouse_init(void);
-static void mouse_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data);
-static bool mouse_is_pressed(void);
-static void mouse_get_xy(lv_coord_t * x, lv_coord_t * y);
-
-static void keypad_init(void);
-static void keypad_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data);
-static uint32_t keypad_get_key(void);
-
-static void encoder_init(void);
-static void encoder_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data);
-static void encoder_handler(void);
-
-static void button_init(void);
-static void button_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data);
-static int8_t button_get_pressed_id(void);
-static bool button_is_pressed(uint8_t id);
-
-/**********************
- *  STATIC VARIABLES
- **********************/
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//
+//     全局变量
+//
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 lv_indev_t * indev_touchpad;
 lv_indev_t * indev_mouse;
 lv_indev_t * indev_keypad;
@@ -59,14 +41,39 @@ lv_indev_t * indev_button;
 static int32_t encoder_diff;
 static lv_indev_state_t encoder_state;
 
-/**********************
- *      MACROS
- **********************/
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//
+//     函数声明
+//
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+static void touchpad_init(void);
+static void touchpad_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data);
+static bool touchpad_is_pressed(void);
+static void touchpad_get_xy(lv_coord_t *x, lv_coord_t *y);
 
-/**********************
- *   GLOBAL FUNCTIONS
- **********************/
+static void mouse_init(void);
+static void mouse_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data);
+static bool mouse_is_pressed(void);
+static void mouse_get_xy(lv_coord_t *x, lv_coord_t *y);
 
+static void keypad_init(void);
+static void keypad_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data);
+static uint32_t keypad_get_key(void);
+
+static void encoder_init(void);
+static void encoder_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data);
+static void encoder_handler(void);
+
+static void button_init(void);
+static void button_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data);
+static int8_t button_get_pressed_id(void);
+static bool button_is_pressed(uint8_t id);
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//
+//     LVGL 输入设备初始化
+//
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 void lv_port_indev_init(void)
 {
     /**
@@ -84,149 +91,142 @@ void lv_port_indev_init(void)
     static lv_indev_drv_t indev_drv;
 
     /*------------------
-     * Touchpad
+     * 触控设备
      * -----------------*/
 
-    /*Initialize your touchpad if you have*/
+    /* 触控设备初始化 */
     touchpad_init();
 
-    /*Register a touchpad input device*/
+    /* 注册触控输入设备 */
     lv_indev_drv_init(&indev_drv);
     indev_drv.type = LV_INDEV_TYPE_POINTER;
     indev_drv.read_cb = touchpad_read;
     indev_touchpad = lv_indev_drv_register(&indev_drv);
 
-    /*------------------
-     * Mouse
-     * -----------------*/
+//    /*------------------
+//     * 鼠标
+//     * -----------------*/
+//
+//    /* 鼠标初始化 */
+//    mouse_init();
+//
+//    /* 注册鼠标输入设备 */
+//    lv_indev_drv_init(&indev_drv);
+//    indev_drv.type = LV_INDEV_TYPE_POINTER;
+//    indev_drv.read_cb = mouse_read;
+//    indev_mouse = lv_indev_drv_register(&indev_drv);
+//
+//    /* 设置指针 */
+//    lv_obj_t * mouse_cursor = lv_img_create(lv_scr_act());
+//    lv_img_set_src(mouse_cursor, LV_SYMBOL_HOME);
+//    lv_indev_set_cursor(indev_mouse, mouse_cursor);
 
-    /*Initialize your mouse if you have*/
-    mouse_init();
+//    /*------------------
+//     * 键盘
+//     * -----------------*/
+//
+//    /* 键盘初始化 */
+//    keypad_init();
+//
+//    /* 注册键盘输入设备 */
+//    lv_indev_drv_init(&indev_drv);
+//    indev_drv.type = LV_INDEV_TYPE_KEYPAD;
+//    indev_drv.read_cb = keypad_read;
+//    indev_keypad = lv_indev_drv_register(&indev_drv);
+//
+//    /*Later you should create group(s) with `lv_group_t * group = lv_group_create()`,
+//     *add objects to the group with `lv_group_add_obj(group, obj)`
+//     *and assign this input device to group to navigate in it:
+//     *`lv_indev_set_group(indev_keypad, group);`*/
 
-    /*Register a mouse input device*/
-    lv_indev_drv_init(&indev_drv);
-    indev_drv.type = LV_INDEV_TYPE_POINTER;
-    indev_drv.read_cb = mouse_read;
-    indev_mouse = lv_indev_drv_register(&indev_drv);
+//    /*------------------
+//     * 编码器
+//     * -----------------*/
+//
+//    /* 编码器初始化 */
+//    encoder_init();
+//
+//    /* 注册编码器输入设备 */
+//    lv_indev_drv_init(&indev_drv);
+//    indev_drv.type = LV_INDEV_TYPE_ENCODER;
+//    indev_drv.read_cb = encoder_read;
+//    indev_encoder = lv_indev_drv_register(&indev_drv);
+//
+//    /*Later you should create group(s) with `lv_group_t * group = lv_group_create()`,
+//     *add objects to the group with `lv_group_add_obj(group, obj)`
+//     *and assign this input device to group to navigate in it:
+//     *`lv_indev_set_group(indev_encoder, group);`*/
 
-    /*Set cursor. For simplicity set a HOME symbol now.*/
-    lv_obj_t * mouse_cursor = lv_img_create(lv_scr_act());
-    lv_img_set_src(mouse_cursor, LV_SYMBOL_HOME);
-    lv_indev_set_cursor(indev_mouse, mouse_cursor);
-
-    /*------------------
-     * Keypad
-     * -----------------*/
-
-    /*Initialize your keypad or keyboard if you have*/
-    keypad_init();
-
-    /*Register a keypad input device*/
-    lv_indev_drv_init(&indev_drv);
-    indev_drv.type = LV_INDEV_TYPE_KEYPAD;
-    indev_drv.read_cb = keypad_read;
-    indev_keypad = lv_indev_drv_register(&indev_drv);
-
-    /*Later you should create group(s) with `lv_group_t * group = lv_group_create()`,
-     *add objects to the group with `lv_group_add_obj(group, obj)`
-     *and assign this input device to group to navigate in it:
-     *`lv_indev_set_group(indev_keypad, group);`*/
-
-    /*------------------
-     * Encoder
-     * -----------------*/
-
-    /*Initialize your encoder if you have*/
-    encoder_init();
-
-    /*Register a encoder input device*/
-    lv_indev_drv_init(&indev_drv);
-    indev_drv.type = LV_INDEV_TYPE_ENCODER;
-    indev_drv.read_cb = encoder_read;
-    indev_encoder = lv_indev_drv_register(&indev_drv);
-
-    /*Later you should create group(s) with `lv_group_t * group = lv_group_create()`,
-     *add objects to the group with `lv_group_add_obj(group, obj)`
-     *and assign this input device to group to navigate in it:
-     *`lv_indev_set_group(indev_encoder, group);`*/
-
-    /*------------------
-     * Button
-     * -----------------*/
-
-    /*Initialize your button if you have*/
-    button_init();
-
-    /*Register a button input device*/
-    lv_indev_drv_init(&indev_drv);
-    indev_drv.type = LV_INDEV_TYPE_BUTTON;
-    indev_drv.read_cb = button_read;
-    indev_button = lv_indev_drv_register(&indev_drv);
-
-    /*Assign buttons to points on the screen*/
-    static const lv_point_t btn_points[2] = {
-        {10, 10},   /*Button 0 -> x:10; y:10*/
-        {40, 100},  /*Button 1 -> x:40; y:100*/
-    };
-    lv_indev_set_button_points(indev_button, btn_points);
+//    /*------------------
+//     * 按键
+//     * -----------------*/
+//
+//    /* 按键初始化 */
+//    button_init();
+//
+//    /* 注册按键输入设备 */
+//    lv_indev_drv_init(&indev_drv);
+//    indev_drv.type = LV_INDEV_TYPE_BUTTON;
+//    indev_drv.read_cb = button_read;
+//    indev_button = lv_indev_drv_register(&indev_drv);
+//
+//    /*Assign buttons to points on the screen*/
+//    static const lv_point_t btn_points[2] = {
+//        {10, 10},   /*Button 0 -> x:10; y:10*/
+//        {40, 100},  /*Button 1 -> x:40; y:100*/
+//    };
+//    lv_indev_set_button_points(indev_button, btn_points);
 }
 
-/**********************
- *   STATIC FUNCTIONS
- **********************/
-
-/*------------------
- * Touchpad
- * -----------------*/
-
-/*Initialize your touchpad*/
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//
+//     触控设备
+//
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 static void touchpad_init(void)
 {
-    /*Your code comes here*/
+    /* TODO 在外部初始化触摸屏 */
 }
 
-/*Will be called by the library to read the touchpad*/
 static void touchpad_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
 {
     static lv_coord_t last_x = 0;
     static lv_coord_t last_y = 0;
 
-    /*Save the pressed coordinates and the state*/
-    if(touchpad_is_pressed()) {
+    /* 保存按压坐标和状态 */
+    if(touchpad_is_pressed())
+    {
         touchpad_get_xy(&last_x, &last_y);
         data->state = LV_INDEV_STATE_PR;
     }
-    else {
+    else
+    {
         data->state = LV_INDEV_STATE_REL;
     }
 
-    /*Set the last pressed coordinates*/
+    /* 设置上一次按压坐标 */
     data->point.x = last_x;
     data->point.y = last_y;
 }
 
-/*Return true is the touchpad is pressed*/
+/* 返回  true 表示被按下 */
 static bool touchpad_is_pressed(void)
 {
-    /*Your code comes here*/
-
-    return false;
+    return TouchInfo.Flag;
 }
 
-/*Get the x and y coordinates if the touchpad is pressed*/
+/* 获取 x, y 坐标*/
 static void touchpad_get_xy(lv_coord_t * x, lv_coord_t * y)
 {
-    /*Your code comes here*/
-
-    (*x) = 0;
-    (*y) = 0;
+    (*x) = TouchInfo.X[0];
+    (*y) = TouchInfo.Y[0];
 }
 
-/*------------------
- * Mouse
- * -----------------*/
-
-/*Initialize your mouse*/
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//
+//     鼠标
+//
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 static void mouse_init(void)
 {
     /*Your code comes here*/
@@ -264,11 +264,11 @@ static void mouse_get_xy(lv_coord_t * x, lv_coord_t * y)
     (*y) = 0;
 }
 
-/*------------------
- * Keypad
- * -----------------*/
-
-/*Initialize your keypad*/
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//
+//     键盘
+//
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 static void keypad_init(void)
 {
     /*Your code comes here*/
@@ -323,11 +323,11 @@ static uint32_t keypad_get_key(void)
     return 0;
 }
 
-/*------------------
- * Encoder
- * -----------------*/
-
-/*Initialize your keypad*/
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//
+//     编码器
+//
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 static void encoder_init(void)
 {
     /*Your code comes here*/
@@ -350,11 +350,11 @@ static void encoder_handler(void)
     encoder_state = LV_INDEV_STATE_REL;
 }
 
-/*------------------
- * Button
- * -----------------*/
-
-/*Initialize your buttons*/
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//
+//     按键
+//
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 static void button_init(void)
 {
     /*Your code comes here*/

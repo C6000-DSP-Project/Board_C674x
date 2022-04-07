@@ -141,6 +141,7 @@ Void HardwareInit()
     // LVGL 图形库
     lv_init();
     lv_port_disp_init();
+    lv_port_indev_init();
 
     // [PRU 核心] LED 点阵模块
     LEDMatrixInit();
