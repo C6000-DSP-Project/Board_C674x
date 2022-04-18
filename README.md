@@ -46,7 +46,8 @@ EVM-CKL138PKT 底板
                      [ 9] wifi ABCD                                         # 发送任意数据到服务器  
                      [10] wifi -e                                           # 退出透传模式（+++）  
                      [11] wifi AT+CIPCLOSE                                  # 断开TCP连接  
-					 AT 指令说明  
+					 AT 指令详细说明  
+					 https://docs.espressif.com/projects/esp-at/zh_CN/latest/esp32/
 14. VPIF             暂不支持  
 15. EMIFA            暂不支持  
 16. M.2 USB          不支持  
