@@ -90,18 +90,18 @@ int Cmd_EEPROM(int argc, char *argv[])
     return 0;
 }
 
-int Cmd_TL2640(int argc, char *argv[])
+int Cmd_OV2640(int argc, char *argv[])
 {
 	if(!strcmp(argv[1], "on"))
 	{
-		UARTprintf("\r\nVPIF TL2640 Test Application\r\n");
+		UARTprintf("\r\nVPIF OV2640 Test Application\r\n");
 		UARTprintf("--------------------------------------------------------------\r\n");
-//		MainTaskStatus = TL2640_ON;
+//		MainTaskStatus = OV2640_ON;
 //		Semaphore_post();
 	}
 	else if(!strcmp(argv[1], "off"))
 	{
-//		MainTaskStatus = TL2640_OFF;
+//		MainTaskStatus = OV2640_OFF;
 //		Semaphore_post();
 	}
 
@@ -289,7 +289,7 @@ tCmdLineEntry g_sCmdTable[] =
     {"eeprom",       Cmd_EEPROM,     "\t\t - EEPROM Test  [eeprom]"},
 
     {"ddr2",         Cmd_DDR2,       "\t\t - DDR2 Test  [ddr2]"},
-    {"tl2640",       Cmd_TL2640,     "\t\t - VPIF TL2640 Test  [tl2640+on/off]"},
+    {"ov2640",       Cmd_OV2640,     "\t\t - VPIF OV2640 Test  [tl2640+on/off]"},
     {"ehrpwm",       Cmd_EHRPWM,     "\t\t - EHRPWM Test  [ehrpwm+on+'freq(Hz)'+'duty ratio(%)'] [ehrpwm+off]"},
     {"sata",         Cmd_SATA,       "\t\t - SATA Test  [sata]"},
 
