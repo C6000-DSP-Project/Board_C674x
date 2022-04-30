@@ -144,7 +144,7 @@ Void HardwareInit()
     lv_port_indev_init();
 
     // [PRU ºËÐÄ] LED µãÕóÄ£¿é
-    LEDMatrixInit();
+//  LEDMatrixInit();
 }
 
 /****************************************************************************/
