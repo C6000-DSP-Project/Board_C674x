@@ -32,6 +32,7 @@
 struct tm RTCTime;
 
 extern unsigned char LEDNixieVal[4];
+extern unsigned char SEGVal[16];
 
 /****************************************************************************/
 /*                                                                          */
@@ -91,11 +92,11 @@ Void RTCHwi(UArg arg)
     RTCTime.tm_sec = bcd2dec(sec);
 
     // 数码管显示时间
-    LEDNixieVal[0] = (hour >> 4) & 0x0F;
-    LEDNixieVal[1] = hour & 0x0F;
+    LEDNixieVal[0] = SEGVal[(hour >> 4) & 0x0F];
+    LEDNixieVal[1] = SEGVal[hour & 0x0F];
 
-    LEDNixieVal[2] = (min >> 4) & 0x0F;
-    LEDNixieVal[3] = min & 0x0F;
+    LEDNixieVal[2] = SEGVal[(min >> 4) & 0x0F];
+    LEDNixieVal[3] = SEGVal[min & 0x0F];
 
     if((LEDNixieVal[0] == 5) && (LEDNixieVal[1] == 9) && (LEDNixieVal[2] == 5) && (LEDNixieVal[3] == 9))
     {

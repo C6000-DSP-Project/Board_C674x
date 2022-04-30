@@ -26,10 +26,9 @@
  */
 #include <App.h>
 
-#include "../PRU/PRULoader.h"
+#include "PRULoader.h"
 
-#include "../PRU/LEDNixie_PRU_Code.h"
-#include "../PRU/LEDNixie_PRU_Data.h"
+#include "PRU_Code.h"
 
 /****************************************************************************/
 /*                                                                          */
@@ -45,7 +44,16 @@
  *      ┗━━━┛. DP
  *        D
  */
-unsigned char *LEDNixieVal = (unsigned char *)0x01C30000;  // PRU0 数据内存
+#pragma DATA_SECTION(LEDNixieVal, ".LEDNixieVal")
+unsigned char LEDNixieVal[4];         // 数码管值
+
+unsigned char SEGVal[16] =
+{
+    0xC0, 0xF9, 0xA4, 0xB0, 0x99,     // 0 1 2 3 4
+    0x92, 0x82, 0xF8, 0x80, 0x90,     // 5 6 7 8 9
+    0x88, 0x83, 0xC6, 0xA1, 0x86,     // A B C D E
+    0x8E                              // F
+};
 
 /****************************************************************************/
 /*                                                                          */
@@ -55,7 +63,6 @@ unsigned char *LEDNixieVal = (unsigned char *)0x01C30000;  // PRU0 数据内存
 void LEDNixieInit()
 {
     // 加载并运行 PRU 程序
-    PRUEnable(PRU_CORE0);
-    PRULoad(PRU_CORE0, (unsigned int*)PRU_Code, (sizeof(PRU_Code) / sizeof(unsigned int)), (unsigned int*)PRU_Data, (sizeof(PRU_Data) / sizeof(unsigned int)));
-    PRURun(PRU_CORE0);
+    PRULoad(PRU0, (unsigned int *)PRU_Code, (sizeof(PRU_Code) / sizeof(unsigned int)), 0, 0);
+    PRURun(PRU0);
 }
