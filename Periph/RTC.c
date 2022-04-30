@@ -34,6 +34,9 @@ struct tm RTCTime;
 extern unsigned char LEDNixieVal[4];
 extern unsigned char SEGVal[16];
 
+// 秒针闪烁
+char SECLED = LED_OFF;
+
 /****************************************************************************/
 /*                                                                          */
 /*              BCD/十进制数转换                                            */
@@ -93,7 +96,9 @@ Void RTCHwi(UArg arg)
 
     // 数码管显示时间
     LEDNixieVal[0] = SEGVal[(hour >> 4) & 0x0F];
-    LEDNixieVal[1] = SEGVal[hour & 0x0F];
+    LEDNixieVal[1] = SEGVal[hour & 0x0F] & ~(SECLED << 7);
+
+    SECLED = !SECLED;
 
     LEDNixieVal[2] = SEGVal[(min >> 4) & 0x0F];
     LEDNixieVal[3] = SEGVal[min & 0x0F];
