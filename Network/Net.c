@@ -50,11 +50,11 @@ char *VerStr = "\nCoreKernel DSP Evaluation Application...\r\n";
 // 静态 IP 配置
 char *HostName        = "CoreKernel";
 char *LocalIPAddr     = "0.0.0.0";          // DHCP 模式下设置为 "0.0.0.0"
-char StaticIPAddr[16] = "10.0.5.2";         // 开发板默认静态 IP
+char StaticIPAddr[16] = "10.0.0.2";         // 开发板默认静态 IP
 char LocalIPMask[16]  = "255.255.255.0";    // DHCP 模式下无效
-char GatewayIP[16]    = "10.0.5.1";         // DHCP 模式下无效
+char GatewayIP[16]    = "10.0.0.1";         // DHCP 模式下无效
 char *DomainName      = "x.corekernel.org"; // DHCP 模式下无效
-char *DNSServer       = "114.114.114.114";  // DNS 服务器
+char *DNSServer       = "10.0.0.1";         // DNS 服务器
 
 // IP 地址
 char IPAddress[16];
@@ -67,16 +67,11 @@ unsigned char DHCP_OPTIONS[] = {DHCPOPT_SERVER_IDENTIFIER, DHCPOPT_ROUTER};
 /*              函数声明                                                    */
 /*                                                                          */
 /****************************************************************************/
-static void NetworkOpen();
-static void NetworkClose();
-static void NetworkIPAddr(IPN IPAddr, unsigned int IfIdx, unsigned int fAdd);
-
 static void ServiceReport(unsigned int Item, unsigned int Status, unsigned int Report, HANDLE h);
-static void DHCPReset(unsigned int IfIdx, unsigned int fOwnTask);
-static void DHCPStatus();
 
 extern void AddWebFiles();
 extern void RemoveWebFiles();
+
 extern void SNTPInit();
 
 /****************************************************************************/
@@ -142,54 +137,6 @@ void NetworkIPAddr(IPN IPAddr, unsigned int IfIdx, unsigned int fAdd)
 
 	NtIPN2Str(IPAddr, IPAddress);
 	ConsoleWrite("%s\r\n", IPAddress);
-}
-
-/****************************************************************************/
-/*                                                                          */
-/*              服务状态                                                    */
-/*                                                                          */
-/****************************************************************************/
-char *TaskName[]  = {"Telnet", "HTTP", "NAT", "DHCPS", "DHCPC", "DNS"};
-char *ReportStr[] = {" ", "Running", "Updated", "Complete", "Fault"};
-char *StatusStr[] = {"Disabled", "Waiting", "IPTerm", "Failed", "Enabled"};
-
-void ServiceReport(unsigned int Item, unsigned int Status, unsigned int Report, HANDLE h)
-{
-	ConsoleWrite("Service Status: %9s: %9s: %9s: %03d\n",
-			     TaskName[Item - 1], StatusStr[Status], ReportStr[Report / 256], Report & 0xFF);
-
-    // 配置 DHCP
-    if(Item == CFGITEM_SERVICE_DHCPCLIENT &&
-       Status == CIS_SRV_STATUS_ENABLED &&
-       (Report == (NETTOOLS_STAT_RUNNING|DHCPCODE_IPADD) ||
-        Report == (NETTOOLS_STAT_RUNNING|DHCPCODE_IPRENEW)))
-    {
-        IPN IPTmp;
-
-        // 配置 DNS
-        IPTmp = inet_addr(DNSServer);
-        if(IPTmp)
-        {
-            CfgAddEntry(0, CFGTAG_SYSINFO, CFGITEM_DHCP_DOMAINNAMESERVER, 0, sizeof(IPTmp), (UINT8 *)&IPTmp, 0);
-        }
-
-        // DHCP 状态
-        DHCPStatus();
-    }
-
-    // 重置 DHCP 客户端服务
-    if(Item == CFGITEM_SERVICE_DHCPCLIENT && (Report & ~0xFF) == NETTOOLS_STAT_FAULT)
-    {
-        CI_SERVICE_DHCPC dhcpc;
-        int tmp;
-
-        // 取得 DHCP 入口数据(传递到 DHCP_reset 索引)
-        tmp = sizeof(dhcpc);
-        CfgEntryGetData(h, &tmp, (UINT8 *)&dhcpc);
-
-        // 创建 DHCP 复位任务（当前函数是在回调函数中执行所以不能直接调用该函数）
-        TaskCreate(DHCPReset, "DHCPreset", OS_TASKPRINORM, 0x1000, dhcpc.cisargs.IfIdx, 1, 0);
-    }
 }
 
 /****************************************************************************/
@@ -312,6 +259,54 @@ void DHCPStatus()
     else
     {
     	ConsoleWrite("\n");
+    }
+}
+
+/****************************************************************************/
+/*                                                                          */
+/*              服务状态                                                    */
+/*                                                                          */
+/****************************************************************************/
+char *TaskName[]  = {"Telnet", "HTTP", "NAT", "DHCPS", "DHCPC", "DNS"};
+char *ReportStr[] = {" ", "Running", "Updated", "Complete", "Fault"};
+char *StatusStr[] = {"Disabled", "Waiting", "IPTerm", "Failed", "Enabled"};
+
+void ServiceReport(unsigned int Item, unsigned int Status, unsigned int Report, HANDLE h)
+{
+    ConsoleWrite("Service Status: %9s: %9s: %9s: %03d\n",
+                 TaskName[Item - 1], StatusStr[Status], ReportStr[Report / 256], Report & 0xFF);
+
+    // 配置 DHCP
+    if(Item == CFGITEM_SERVICE_DHCPCLIENT &&
+       Status == CIS_SRV_STATUS_ENABLED &&
+       (Report == (NETTOOLS_STAT_RUNNING|DHCPCODE_IPADD) ||
+        Report == (NETTOOLS_STAT_RUNNING|DHCPCODE_IPRENEW)))
+    {
+        IPN IPTmp;
+
+        // 配置 DNS
+        IPTmp = inet_addr(DNSServer);
+        if(IPTmp)
+        {
+            CfgAddEntry(0, CFGTAG_SYSINFO, CFGITEM_DHCP_DOMAINNAMESERVER, 0, sizeof(IPTmp), (UINT8 *)&IPTmp, 0);
+        }
+
+        // DHCP 状态
+        DHCPStatus();
+    }
+
+    // 重置 DHCP 客户端服务
+    if(Item == CFGITEM_SERVICE_DHCPCLIENT && (Report & ~0xFF) == NETTOOLS_STAT_FAULT)
+    {
+        CI_SERVICE_DHCPC dhcpc;
+        int tmp;
+
+        // 取得 DHCP 入口数据(传递到 DHCP_reset 索引)
+        tmp = sizeof(dhcpc);
+        CfgEntryGetData(h, &tmp, (UINT8 *)&dhcpc);
+
+        // 创建 DHCP 复位任务（当前函数是在回调函数中执行所以不能直接调用该函数）
+        TaskCreate(DHCPReset, "DHCPReset", OS_TASKPRINORM, 0x1000, dhcpc.cisargs.IfIdx, 1, 0);
     }
 }
 
