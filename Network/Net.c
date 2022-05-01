@@ -388,9 +388,9 @@ Void NetworkTask(UArg a0, UArg a1)
 
 		// 输出配置信息
 		ConsoleWrite("\r\n");
-		ConsoleWrite("IP Address is set to %s\n", StaticIPAddr);
-		ConsoleWrite("IP subnet mask is set to %s\n", LocalIPMask);
-		ConsoleWrite("IP default gateway is set to %s\n", GatewayIP);
+		ConsoleWrite("IP Address %s\n", StaticIPAddr);
+		ConsoleWrite("IP Subnet Mask %s\n", LocalIPMask);
+		ConsoleWrite("IP Default Gateway %s\n", GatewayIP);
 
     }
     else if(a0 == 0)
@@ -483,7 +483,7 @@ Void NetworkTask(UArg a0, UArg a1)
     } while(rc);
 
     // 停止消息
-    ConsoleWrite("NDK Task has been stop(Return Code %d)!\r\n", rc);
+    ConsoleWrite("Network Task has been stop(Return Code %d)!\r\n", rc);
 
     // 删除配置
     CfgFree(hCfg);
