@@ -97,9 +97,9 @@
 #define EVM_LED3    65
 #define EVM_LED4    48
 
-// LED ×´Ì¬
-#define LED_OFF     0
-#define LED_ON      1
+// LED ×´Ì¬(Óë NDK ¶¨Òå³åÍ»)
+//#define LED_OFF     0
+//#define LED_ON      1
 
 // KEY
 #define EVM_KEY4    141

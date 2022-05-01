@@ -278,6 +278,90 @@ int Cmd_WIFI(int argc, char *argv[])
     return 0;
 }
 
+/****************************************************************************/
+/*                                                                          */
+/*              网络                                                        */
+/*                                                                          */
+/****************************************************************************/
+// 静态网络参数配置
+extern char StaticIPAddr[16];
+extern char LocalIPMask[16];
+extern char GatewayIP[16];
+extern char NDKFlag;
+extern int NDKCfg;
+
+extern Void NetworkTask(UArg a0, UArg a1);
+
+int Cmd_NET(int argc, char *argv[])
+{
+    // EMAC 初始化
+//    EMACInit();
+
+    // 输出参数
+    char i;
+    for(i = 1; i < argc; i++)
+    {
+        ConsoleWrite("parameter: %s\n", argv[i]);
+    }
+
+    // DHCP 或静态配置
+    /* NDK 任务 */
+    Task_Params TaskParams;
+
+    Task_Params_init(&TaskParams);
+    TaskParams.priority = 5;
+    TaskParams.instance->name = "Network";
+    TaskParams.stackSize = 1024 * 1024;
+
+
+    if(!strcmp(argv[1], "dhcp"))
+    {
+        if(NDKFlag)
+        {
+            ConsoleWrite("NDK Stack is already running!\n");
+        }
+        else
+        {
+            TaskParams.arg0 = 0;
+            Task_create(NetworkTask, &TaskParams, NULL);
+        }
+    }
+    else if(!strcmp(argv[1], "static") && argc == 5)
+    {
+        if(NDKFlag)
+        {
+            ConsoleWrite("NDK Stack is already running!\n");
+        }
+        else
+        {
+            TaskParams.arg0 = 1;
+
+            strcpy(StaticIPAddr, argv[2]);
+            strcpy(LocalIPMask, argv[3]);
+            strcpy(GatewayIP, argv[4]);
+
+            Task_create(NetworkTask, &TaskParams, NULL);
+        }
+    }
+    else if(!strcmp(argv[1], "exit"))
+    {
+        NC_NetStop(0);
+        Task_sleep(1000);
+
+//      NC_SystemClose();
+
+        NDKFlag = 0;
+    }
+    else
+    {
+        ConsoleWrite("Unknown parameter\n");
+    }
+
+    Task_sleep(100);
+
+    return 0;
+}
+
 // 命令字表
 tCmdLineEntry g_sCmdTable[] =
 {
@@ -302,6 +386,8 @@ tCmdLineEntry g_sCmdTable[] =
     {"clock",        Cmd_RTC,        "\t\t - Get/Set RTC Date or Time."},
 
     {"wifi",         Cmd_WIFI,       "\t\t - WIFI."},
+
+    { "net",         Cmd_NET,        "\t\t Config the NDK stack"},
 
     { 0, 0, 0 }
 };
