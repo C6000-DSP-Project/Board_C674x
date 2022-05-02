@@ -85,11 +85,8 @@ void CacheInit()
     cacheSize.l2Size  = Cache_L2Size_128K;
     Cache_setSize(&cacheSize);
 
-    // ≈‰÷√≤ªø…ª∫¥Ê«¯”Ú
-    Cache_setMar((Ptr *)0xC2000000, 0x06000000, Cache_Mar_DISABLE); // DDR2
-
     // ≈‰÷√ø…ª∫¥Ê«¯”Ú
-    Cache_setMar((Ptr *)0xC0000000, 0x02000000, Cache_Mar_ENABLE);  // DDR2
+    Cache_setMar((Ptr *)0xC0000000, 0x08000000, Cache_Mar_ENABLE);  // DDR2
 }
 
 /****************************************************************************/

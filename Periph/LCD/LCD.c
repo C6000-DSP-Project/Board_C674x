@@ -30,7 +30,7 @@
 /*                                                                          */
 /****************************************************************************/
 #pragma DATA_ALIGN(g_pucBuffer, 4);
-unsigned char g_pucBuffer[4 + (16 * 2) + (LCD_WIDTH * LCD_HEIGHT *2)];
+unsigned char g_pucBuffer[4 + (16 * 2) + (LCD_WIDTH * LCD_HEIGHT * 2)];
 
 // µ÷É«°å
 unsigned short palette_32b[PALETTE_SIZE / 2] =

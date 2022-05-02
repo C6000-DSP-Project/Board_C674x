@@ -175,7 +175,6 @@ void lv_port_disp_init(void)
 
     /* 回调函数 */
     disp_drv.flush_cb = disp_flush;
-    disp_drv.monitor_cb = disp_monitor_cb;
 
     /* 配置显示缓冲区 */
     disp_drv.draw_buf = &draw_buf_dsc;
@@ -223,29 +222,33 @@ static void disp_init(void)
 /****************************************************************************/
 static void disp_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area, lv_color_t *color_p)
 {
-    int32_t x;
+    int32_t len = (area->y2 - area->y1 + 1) * (area->x2 - area->x1 + 1) * sizeof(unsigned short);
+
+    /* 维护缓存一致性 */
+//    Cache_inv(color_p, len, Cache_Type_ALLD, true);
+    Cache_wbInvAll();
+
+    unsigned short *LCDBuf = (unsigned short *)(g_pucBuffer + (PALETTE_OFFSET + PALETTE_SIZE));
+
     int32_t y;
-
-    unsigned short *LCDBuf = (unsigned short *)g_pucBuffer;
-
     for(y = area->y1; y <= area->y2; y++)
     {
-        for(x = area->x1; x <= area->x2; x++)
-        {
-            LCDBuf[((PALETTE_OFFSET + PALETTE_SIZE) / 2) + y * LCD_WIDTH + x] = *((unsigned short *)color_p);
-            color_p++;
-        }
+        memcpy((void *)&LCDBuf[y * LCD_WIDTH + area->x1], color_p, (area->x2 - area->x1 + 1) * sizeof(unsigned short));
+        color_p += area->x2 - area->x1 + 1;
     }
+
+    /* 维护缓存一致性 */
+    Cache_wbInvAll();
+
+    /* 修复画面错位 */
+    RasterDisable(SOC_LCDC_0_REGS);
+    RasterEnable(SOC_LCDC_0_REGS);
+
+//    Cache_wb(&LCDBuf, (LCD_WIDTH * LCD_HEIGHT) * sizeof(unsigned short), Cache_Type_ALLD, true);
 
     /* 重要!!!
      * 通知图形库显示更新就绪 */
     lv_disp_flush_ready(disp_drv);
-}
-
-void disp_monitor_cb(lv_disp_drv_t *disp_drv, uint32_t time, uint32_t px)
-{
-    /* 维护缓存一致性 */
-    Cache_wbInvAll();
 }
 
 #else /*Enable this file at the top*/
