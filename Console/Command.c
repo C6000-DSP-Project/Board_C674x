@@ -345,7 +345,7 @@ int Cmd_NET(int argc, char *argv[])
     }
     else if(!strcmp(argv[1], "exit"))
     {
-        NC_NetStop(0);
+//        NC_NetStop(0);
         Task_sleep(1000);
 
 //      NC_SystemClose();

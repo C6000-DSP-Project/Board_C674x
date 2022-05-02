@@ -36,7 +36,7 @@ int CGINet(SOCKET htmlSock, int ContentLength, char *pArgs);
 /*              添加 Web 文件到 EFS 文件系统                                */
 /*                                                                          */
 /****************************************************************************/
-static int OurRealm = 1;
+//static int OurRealm = 1;
 
 void AddWebFiles(void)
 {

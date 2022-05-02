@@ -33,13 +33,13 @@
 //
 // ©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥
 lv_indev_t * indev_touchpad;
-lv_indev_t * indev_mouse;
-lv_indev_t * indev_keypad;
-lv_indev_t * indev_encoder;
-lv_indev_t * indev_button;
+//lv_indev_t * indev_mouse;
+//lv_indev_t * indev_keypad;
+//lv_indev_t * indev_encoder;
+//lv_indev_t * indev_button;
 
-static int32_t encoder_diff;
-static lv_indev_state_t encoder_state;
+//static int32_t encoder_diff;
+//static lv_indev_state_t encoder_state;
 
 // ©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥
 //
@@ -51,6 +51,7 @@ static void touchpad_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data);
 static bool touchpad_is_pressed(void);
 static void touchpad_get_xy(lv_coord_t *x, lv_coord_t *y);
 
+/*
 static void mouse_init(void);
 static void mouse_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data);
 static bool mouse_is_pressed(void);
@@ -68,6 +69,7 @@ static void button_init(void);
 static void button_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data);
 static int8_t button_get_pressed_id(void);
 static bool button_is_pressed(uint8_t id);
+*/
 
 // ©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥
 //
@@ -222,190 +224,190 @@ static void touchpad_get_xy(lv_coord_t * x, lv_coord_t * y)
     (*y) = TouchInfo.Y[0];
 }
 
-// ©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥
+//// ©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥
+////
+////     Êó±ê
+////
+//// ©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥
+//static void mouse_init(void)
+//{
+//    /*Your code comes here*/
+//}
 //
-//     Êó±ê
+///*Will be called by the library to read the mouse*/
+//static void mouse_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
+//{
+//    /*Get the current x and y coordinates*/
+//    mouse_get_xy(&data->point.x, &data->point.y);
 //
-// ©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥
-static void mouse_init(void)
-{
-    /*Your code comes here*/
-}
-
-/*Will be called by the library to read the mouse*/
-static void mouse_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
-{
-    /*Get the current x and y coordinates*/
-    mouse_get_xy(&data->point.x, &data->point.y);
-
-    /*Get whether the mouse button is pressed or released*/
-    if(mouse_is_pressed()) {
-        data->state = LV_INDEV_STATE_PR;
-    }
-    else {
-        data->state = LV_INDEV_STATE_REL;
-    }
-}
-
-/*Return true is the mouse button is pressed*/
-static bool mouse_is_pressed(void)
-{
-    /*Your code comes here*/
-
-    return false;
-}
-
-/*Get the x and y coordinates if the mouse is pressed*/
-static void mouse_get_xy(lv_coord_t * x, lv_coord_t * y)
-{
-    /*Your code comes here*/
-
-    (*x) = 0;
-    (*y) = 0;
-}
-
-// ©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥
+//    /*Get whether the mouse button is pressed or released*/
+//    if(mouse_is_pressed()) {
+//        data->state = LV_INDEV_STATE_PR;
+//    }
+//    else {
+//        data->state = LV_INDEV_STATE_REL;
+//    }
+//}
 //
-//     ¼üÅÌ
+///*Return true is the mouse button is pressed*/
+//static bool mouse_is_pressed(void)
+//{
+//    /*Your code comes here*/
 //
-// ©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥
-static void keypad_init(void)
-{
-    /*Your code comes here*/
-}
-
-/*Will be called by the library to read the mouse*/
-static void keypad_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
-{
-    static uint32_t last_key = 0;
-
-    /*Get the current x and y coordinates*/
-    mouse_get_xy(&data->point.x, &data->point.y);
-
-    /*Get whether the a key is pressed and save the pressed key*/
-    uint32_t act_key = keypad_get_key();
-    if(act_key != 0) {
-        data->state = LV_INDEV_STATE_PR;
-
-        /*Translate the keys to LVGL control characters according to your key definitions*/
-        switch(act_key) {
-            case 1:
-                act_key = LV_KEY_NEXT;
-                break;
-            case 2:
-                act_key = LV_KEY_PREV;
-                break;
-            case 3:
-                act_key = LV_KEY_LEFT;
-                break;
-            case 4:
-                act_key = LV_KEY_RIGHT;
-                break;
-            case 5:
-                act_key = LV_KEY_ENTER;
-                break;
-        }
-
-        last_key = act_key;
-    }
-    else {
-        data->state = LV_INDEV_STATE_REL;
-    }
-
-    data->key = last_key;
-}
-
-/*Get the currently being pressed key.  0 if no key is pressed*/
-static uint32_t keypad_get_key(void)
-{
-    /*Your code comes here*/
-
-    return 0;
-}
-
-// ©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥
+//    return false;
+//}
 //
-//     ±àÂëÆ÷
+///*Get the x and y coordinates if the mouse is pressed*/
+//static void mouse_get_xy(lv_coord_t * x, lv_coord_t * y)
+//{
+//    /*Your code comes here*/
 //
-// ©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥
-static void encoder_init(void)
-{
-    /*Your code comes here*/
-}
-
-/*Will be called by the library to read the encoder*/
-static void encoder_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
-{
-
-    data->enc_diff = encoder_diff;
-    data->state = encoder_state;
-}
-
-/*Call this function in an interrupt to process encoder events (turn, press)*/
-static void encoder_handler(void)
-{
-    /*Your code comes here*/
-
-    encoder_diff += 0;
-    encoder_state = LV_INDEV_STATE_REL;
-}
-
-// ©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥
+//    (*x) = 0;
+//    (*y) = 0;
+//}
 //
-//     °´¼ü
+//// ©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥
+////
+////     ¼üÅÌ
+////
+//// ©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥
+//static void keypad_init(void)
+//{
+//    /*Your code comes here*/
+//}
 //
-// ©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥
-static void button_init(void)
-{
-    /*Your code comes here*/
-}
-
-/*Will be called by the library to read the button*/
-static void button_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
-{
-
-    static uint8_t last_btn = 0;
-
-    /*Get the pressed button's ID*/
-    int8_t btn_act = button_get_pressed_id();
-
-    if(btn_act >= 0) {
-        data->state = LV_INDEV_STATE_PR;
-        last_btn = btn_act;
-    }
-    else {
-        data->state = LV_INDEV_STATE_REL;
-    }
-
-    /*Save the last pressed button's ID*/
-    data->btn_id = last_btn;
-}
-
-/*Get ID  (0, 1, 2 ..) of the pressed button*/
-static int8_t button_get_pressed_id(void)
-{
-    uint8_t i;
-
-    /*Check to buttons see which is being pressed (assume there are 2 buttons)*/
-    for(i = 0; i < 2; i++) {
-        /*Return the pressed button's ID*/
-        if(button_is_pressed(i)) {
-            return i;
-        }
-    }
-
-    /*No button pressed*/
-    return -1;
-}
-
-/*Test if `id` button is pressed or not*/
-static bool button_is_pressed(uint8_t id)
-{
-
-    /*Your code comes here*/
-
-    return false;
-}
+///*Will be called by the library to read the mouse*/
+//static void keypad_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
+//{
+//    static uint32_t last_key = 0;
+//
+//    /*Get the current x and y coordinates*/
+//    mouse_get_xy(&data->point.x, &data->point.y);
+//
+//    /*Get whether the a key is pressed and save the pressed key*/
+//    uint32_t act_key = keypad_get_key();
+//    if(act_key != 0) {
+//        data->state = LV_INDEV_STATE_PR;
+//
+//        /*Translate the keys to LVGL control characters according to your key definitions*/
+//        switch(act_key) {
+//            case 1:
+//                act_key = LV_KEY_NEXT;
+//                break;
+//            case 2:
+//                act_key = LV_KEY_PREV;
+//                break;
+//            case 3:
+//                act_key = LV_KEY_LEFT;
+//                break;
+//            case 4:
+//                act_key = LV_KEY_RIGHT;
+//                break;
+//            case 5:
+//                act_key = LV_KEY_ENTER;
+//                break;
+//        }
+//
+//        last_key = act_key;
+//    }
+//    else {
+//        data->state = LV_INDEV_STATE_REL;
+//    }
+//
+//    data->key = last_key;
+//}
+//
+///*Get the currently being pressed key.  0 if no key is pressed*/
+//static uint32_t keypad_get_key(void)
+//{
+//    /*Your code comes here*/
+//
+//    return 0;
+//}
+//
+//// ©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥
+////
+////     ±àÂëÆ÷
+////
+//// ©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥
+//static void encoder_init(void)
+//{
+//    /*Your code comes here*/
+//}
+//
+///*Will be called by the library to read the encoder*/
+//static void encoder_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
+//{
+//
+//    data->enc_diff = encoder_diff;
+//    data->state = encoder_state;
+//}
+//
+///*Call this function in an interrupt to process encoder events (turn, press)*/
+//static void encoder_handler(void)
+//{
+//    /*Your code comes here*/
+//
+//    encoder_diff += 0;
+//    encoder_state = LV_INDEV_STATE_REL;
+//}
+//
+//// ©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥
+////
+////     °´¼ü
+////
+//// ©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥
+//static void button_init(void)
+//{
+//    /*Your code comes here*/
+//}
+//
+///*Will be called by the library to read the button*/
+//static void button_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
+//{
+//
+//    static uint8_t last_btn = 0;
+//
+//    /*Get the pressed button's ID*/
+//    int8_t btn_act = button_get_pressed_id();
+//
+//    if(btn_act >= 0) {
+//        data->state = LV_INDEV_STATE_PR;
+//        last_btn = btn_act;
+//    }
+//    else {
+//        data->state = LV_INDEV_STATE_REL;
+//    }
+//
+//    /*Save the last pressed button's ID*/
+//    data->btn_id = last_btn;
+//}
+//
+///*Get ID  (0, 1, 2 ..) of the pressed button*/
+//static int8_t button_get_pressed_id(void)
+//{
+//    uint8_t i;
+//
+//    /*Check to buttons see which is being pressed (assume there are 2 buttons)*/
+//    for(i = 0; i < 2; i++) {
+//        /*Return the pressed button's ID*/
+//        if(button_is_pressed(i)) {
+//            return i;
+//        }
+//    }
+//
+//    /*No button pressed*/
+//    return -1;
+//}
+//
+///*Test if `id` button is pressed or not*/
+//static bool button_is_pressed(uint8_t id)
+//{
+//
+//    /*Your code comes here*/
+//
+//    return false;
+//}
 
 #else /*Enable this file at the top*/
 
