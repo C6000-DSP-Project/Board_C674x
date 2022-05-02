@@ -106,7 +106,6 @@ extern void UARTprintf(const char *fmt, ...);
 Void LVGLTask(UArg a0, UArg a1)
 {
     lv_log_register_print_cb(UARTprintf);
-
     your_test_function();
 //    lv_example_get_started_1();
 //    lv_example_keyboard_1();
@@ -183,8 +182,8 @@ void lv_port_disp_init(void)
     //disp_drv.full_refresh = 1;
 
     /* Ðý×ª */
-    //disp_drv.rotated = LV_DISP_ROT_180;
-
+//  disp_drv.sw_rotate = 1;
+//  disp_drv.rotated = LV_DISP_ROT_90;
 
     /* ×¢²áÇý¶¯ */
     lv_disp_drv_register(&disp_drv);
