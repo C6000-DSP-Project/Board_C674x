@@ -27,8 +27,9 @@
 /*              全局变量                                                    */
 /*                                                                          */
 /****************************************************************************/
-// 时间标签
-lv_obj_t *time_label;
+// 标签
+lv_obj_t *time_label;  // 时间标签
+lv_obj_t *temp_label;  // 温度湿度标签
 
 /****************************************************************************/
 /*                                                                          */
@@ -73,8 +74,9 @@ void HomePage()
     lv_label_set_recolor(time_label, true);                                        // 允许修改文本颜色
 
     // 显示温湿度
-    lv_obj_t * temp_label = lv_label_create(lv_scr_act());
+    temp_label = lv_label_create(lv_scr_act());
     lv_obj_set_style_text_font(temp_label, &SourceHanSansCN_Normal_16, 0);
     lv_obj_set_width(temp_label, 100);
     lv_obj_align(temp_label, LV_ALIGN_BOTTOM_LEFT, 5, -5);
+    lv_label_set_recolor(temp_label, true);
 }

@@ -34,7 +34,9 @@ extern void UARTprintf(const char *fmt, ...);
 // 页面
 void HomePage();
 
+// 标签
 extern lv_obj_t *time_label;  // 时间标签
+extern lv_obj_t *temp_label;  // 温度湿度标签
 
 /****************************************************************************/
 /*                                                                          */
@@ -50,11 +52,20 @@ Void LVGLTask(UArg a0, UArg a1)
     // 主页
     HomePage();
 
+    // 任务循环
+    float t, rh;
+    char str[64];
+
     for(;;)
     {
-        // 更新时间
+        // 时间
         lv_label_set_text_fmt(time_label, "#ffffff %04d/%02d/%02d %s %02d:%02d:%02d#", RTCTime.tm_year + 1920, RTCTime.tm_mon, RTCTime.tm_mday, WeekDayStr[RTCTime.tm_wday],
                                                                                        RTCTime.tm_hour, RTCTime.tm_min, RTCTime.tm_sec);
+
+        // 温度/湿度
+        TempSensorGet(&t, &rh);
+        sprintf(str, "%s %2.2f%s %s %2.2f%%", TempStr, t, DegStr, HumStr, rh);
+        lv_label_set_text_fmt(temp_label, "#ffffff %s#", str);
 
         lv_timer_handler();
         Task_sleep(1000);
