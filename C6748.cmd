@@ -15,5 +15,6 @@
 
 SECTIONS
 {
+    .text:_c_int00			>  0xC3000000
     .LEDNixieVal			>  SHRAM
 }

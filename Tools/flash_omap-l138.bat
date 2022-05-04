@@ -1,0 +1,1 @@
+sfh_OMAP-L138 -flash_noubl -targetType OMAPL138 -flashType SPI_MEM -p COM6 Board_C674x_OMAP-L138.ais
