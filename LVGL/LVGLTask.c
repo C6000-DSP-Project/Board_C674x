@@ -48,6 +48,15 @@ Void LVGLTask(UArg a0, UArg a1)
     // 配置日志输出
     lv_log_register_print_cb((lv_log_print_g_cb_t)UARTprintf);
 
+    for(;;)
+    {
+        lv_timer_handler();
+        Task_sleep(5);
+    }
+}
+
+Void LVGLAppTask(UArg a0, UArg a1)
+{
     // 页面
     // 主页
     HomePage();
@@ -55,6 +64,8 @@ Void LVGLTask(UArg a0, UArg a1)
     // 任务循环
     float t, rh;
     char str[64];
+
+    char *WeekDayStr[] = {sundayStr, mondayStr, tuesdayStr, wednesdayStr, thurdayStr, fridayStr, saturdayStr};
 
     for(;;)
     {
@@ -64,10 +75,9 @@ Void LVGLTask(UArg a0, UArg a1)
 
         // 温度/湿度
         TempSensorGet(&t, &rh);
-        sprintf(str, "%s %2.2f%s %s %2.2f%%", TempStr, t, DegStr, HumStr, rh);
+        sprintf(str, "%s %2.2f%s %s %2.2f%%", tempStr, t, degStr, humStr, rh);
         lv_label_set_text_fmt(temp_label, "#ffffff %s#", str);
-
-        lv_timer_handler();
         Task_sleep(1000);
     }
 }
+

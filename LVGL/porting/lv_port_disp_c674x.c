@@ -42,6 +42,7 @@ static void disp_init(void);
 static void disp_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area, lv_color_t *color_p);
 
 extern Void LVGLTask(UArg a0, UArg a1);
+extern Void LVGLAppTask(UArg a0, UArg a1);
 
 /****************************************************************************/
 /*                                                                          */
@@ -145,8 +146,13 @@ static void disp_init(void)
     Task_Params taskParams;
     Task_Params_init(&taskParams);
 
+    taskParams.priority = 15;
     taskParams.stackSize = 128 * 1024;
     Task_create(LVGLTask, &taskParams, NULL);
+
+    taskParams.priority = 1;
+    taskParams.stackSize = 128 * 1024;
+    Task_create(LVGLAppTask, &taskParams, NULL);
 }
 
 /****************************************************************************/

@@ -28,13 +28,24 @@
 #define ZH_CN_H_
 
 // 星期
-char *WeekDayStr[] = {"星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
+#define sundayStr    "星期日"
+#define mondayStr    "星期一"
+#define tuesdayStr   "星期二"
+#define wednesdayStr "星期三"
+#define thurdayStr   "星期四"
+#define fridayStr    "星期五"
+#define saturdayStr  "星期六"
 
 // 温度
-char *TempStr = "温度";
-char *DegStr = "°C";
+#define tempStr "温度"
+#define degStr "°C"
 
 // 湿度
-char *HumStr = "湿度";
+#define humStr "湿度"
+
+// 图标文字
+#define RoateStr "屏幕旋转"
+#define CalculatorStr "计算器"
+#define SystemInfoStr "系统信息"
 
 #endif
