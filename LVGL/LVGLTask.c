@@ -26,6 +26,17 @@
 
 /****************************************************************************/
 /*                                                                          */
+/*              全局变量                                                    */
+/*                                                                          */
+/****************************************************************************/
+// 星期
+char *WeekDayStr[] = {SundayStr, MondayStr, TuesdayStr, WednesdayStr, ThurdayStr, FridayStr, SaturdayStr};
+
+// 温度湿度
+float t, rh;
+
+/****************************************************************************/
+/*                                                                          */
 /*              函数声明                                                    */
 /*                                                                          */
 /****************************************************************************/
@@ -62,10 +73,7 @@ Void LVGLAppTask(UArg a0, UArg a1)
     HomePage();
 
     // 任务循环
-    float t, rh;
     char str[64];
-
-    char *WeekDayStr[] = {sundayStr, mondayStr, tuesdayStr, wednesdayStr, thurdayStr, fridayStr, saturdayStr};
 
     for(;;)
     {
@@ -75,7 +83,7 @@ Void LVGLAppTask(UArg a0, UArg a1)
 
         // 温度/湿度
         TempSensorGet(&t, &rh);
-        sprintf(str, "%s %2.2f%s %s %2.2f%%", tempStr, t, degStr, humStr, rh);
+        sprintf(str, "%s %2.2f%s %s %2.2f%%", TempStr, t, DegStr, HumStr, rh);
         lv_label_set_text_fmt(temp_label, "#ffffff %s#", str);
         Task_sleep(1000);
     }

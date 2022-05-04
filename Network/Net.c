@@ -48,7 +48,9 @@ char NDKFlag;
 char *VerStr = "\nCoreKernel DSP Evaluation Application...\r\n";
 
 // 静态 IP 配置
-char *HostName        = "CoreKernel";
+char DHCPMode = 0;                          // DHCP 模式/静态
+
+char *HostName        = "xiwangjianmo";
 char *LocalIPAddr     = "0.0.0.0";          // DHCP 模式下设置为 "0.0.0.0"
 char StaticIPAddr[16] = "10.0.0.2";         // 开发板默认静态 IP
 char LocalIPMask[16]  = "255.255.255.0";    // DHCP 模式下无效
@@ -317,6 +319,8 @@ void ServiceReport(unsigned int Item, unsigned int Status, unsigned int Report, 
 /****************************************************************************/
 Void NetworkTask(UArg a0, UArg a1)
 {
+    DHCPMode = a0;
+
 	int rc;
 
     // 初始化操作系统环境

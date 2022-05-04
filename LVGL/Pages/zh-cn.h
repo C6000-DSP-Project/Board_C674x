@@ -28,24 +28,42 @@
 #define ZH_CN_H_
 
 // 星期
-#define sundayStr    "星期日"
-#define mondayStr    "星期一"
-#define tuesdayStr   "星期二"
-#define wednesdayStr "星期三"
-#define thurdayStr   "星期四"
-#define fridayStr    "星期五"
-#define saturdayStr  "星期六"
+#define SundayStr    "星期日"
+#define MondayStr    "星期一"
+#define TuesdayStr   "星期二"
+#define WednesdayStr "星期三"
+#define ThurdayStr   "星期四"
+#define FridayStr    "星期五"
+#define SaturdayStr  "星期六"
 
 // 温度
-#define tempStr "温度"
-#define degStr "°C"
+#define TempStr "温度"
+#define DegStr "°C"
 
 // 湿度
-#define humStr "湿度"
+#define HumStr "湿度"
 
 // 图标文字
 #define RoateStr "屏幕旋转"
 #define CalculatorStr "计算器"
 #define SystemInfoStr "系统信息"
+
+// 系统信息文字
+#define DSPTypeStr        "TMS320C6748"
+#define DSPFreqStr        "DSP 主频"
+#define PRUFreqStr        "PRU 主频"
+#define DDRFreqStr        "DDR2 频率"
+#define BootStr           "启动模式"
+#define HostNameStr       "主机名"
+#define MACAddrStr        "MAC 地址"
+#define DHCPModeStr       "模式"
+#define DHCPModeAutoStr   "DHCP 动态获取"
+#define DHCPModeStaticStr "静态配置"
+#define IPAddrStr         "IP 地址"
+#define SubMaskStr        "子网掩码"
+#define GateWayStr        "网关"
+#define DomainNameStr     "域名"
+#define DNSServerStr      "DNS 服务器"
+#define WIFISSIDStr       "无线网络"
 
 #endif
