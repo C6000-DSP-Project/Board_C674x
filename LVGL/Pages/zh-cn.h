@@ -28,29 +28,32 @@
 #define ZH_CN_H_
 
 // 星期
-#define SundayStr    "星期日"
-#define MondayStr    "星期一"
-#define TuesdayStr   "星期二"
-#define WednesdayStr "星期三"
-#define ThurdayStr   "星期四"
-#define FridayStr    "星期五"
-#define SaturdayStr  "星期六"
+#define SundayStr         "星期日"
+#define MondayStr         "星期一"
+#define TuesdayStr        "星期二"
+#define WednesdayStr      "星期三"
+#define ThurdayStr        "星期四"
+#define FridayStr         "星期五"
+#define SaturdayStr       "星期六"
 
 // 温度
-#define TempStr "温度"
-#define DegStr "°C"
+#define TempStr           "温度"
+#define DegStr            "°C"
 
 // 湿度
-#define HumStr "湿度"
+#define HumStr            "湿度"
 
 // 图标文字
-#define RoateStr "屏幕旋转"
-#define CalculatorStr "计算器"
-#define SystemInfoStr "系统信息"
+#define RoateStr          "屏幕旋转"
+#define CalculatorStr     "计算器"
+#define SystemInfoStr     "系统信息"
+#define LANStr            "有线网络"
+#define WLANStr           "无线网络"
 
-// 系统信息文字
-#define DSPTypeStr        "TMS320C6748"
+// 系统信息
+#define DSPTypeStr        "C6748/OMAP-L138"
 #define DSPFreqStr        "DSP 主频"
+#define ARMFreqStr        "ARM 主频"
 #define PRUFreqStr        "PRU 主频"
 #define DDRFreqStr        "DDR2 频率"
 #define BootStr           "启动模式"
@@ -65,5 +68,14 @@
 #define DomainNameStr     "域名"
 #define DNSServerStr      "DNS 服务器"
 #define WIFISSIDStr       "无线网络"
+
+// 网络
+#define LANCFGStr         "网络配置"
+#define LANTCPStr         "TCP 连接"
+#define LANUDPStr         "UDP 连接"
+#define LANHTTPStr        "HTTP 服务器"
+#define LANTELNETStr      "Telnet 服务器"
+#define DHCPStr           "DHCP"
+#define NETInitStr        "网络初始化"
 
 #endif

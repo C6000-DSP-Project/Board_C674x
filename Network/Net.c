@@ -50,7 +50,7 @@ char *VerStr = "\nCoreKernel DSP Evaluation Application...\r\n";
 // 静态 IP 配置
 char DHCPMode = 0;                          // DHCP 模式/静态
 
-char *HostName        = "xiwangjianmo";
+char *HostName        = "CoreKernel";
 char *LocalIPAddr     = "0.0.0.0";          // DHCP 模式下设置为 "0.0.0.0"
 char StaticIPAddr[16] = "10.0.0.2";         // 开发板默认静态 IP
 char LocalIPMask[16]  = "255.255.255.0";    // DHCP 模式下无效

@@ -69,8 +69,8 @@ void SystemInfoWin()
     lv_table_set_col_width(table, 1, 300);
 
     // 第一列
-    lv_table_set_cell_value(table, 0, 0, DSPTypeStr);
-    lv_table_set_cell_value(table, 1, 0, DSPFreqStr);
+    lv_table_set_cell_value(table, 0, 0, DSPFreqStr);
+    lv_table_set_cell_value(table, 1, 0, ARMFreqStr);
     lv_table_set_cell_value(table, 2, 0, PRUFreqStr);
     lv_table_set_cell_value(table, 3, 0, DDRFreqStr);
     lv_table_set_cell_value(table, 4, 0, BootStr);
@@ -113,15 +113,16 @@ void SystemInfoWin()
     char str[64];
 
     // 第二列
-    lv_table_set_cell_value(table, 0, 1, "C674x");
-
     sprintf(str, "%dMHz", pllcfg.PLL0_SYSCLK1);
+    lv_table_set_cell_value(table, 0, 1, str);
+
+    sprintf(str, "%dMHz(仅 OMAP-L138)", pllcfg.PLL0_SYSCLK6);
     lv_table_set_cell_value(table, 1, 1, str);
 
     sprintf(str, "%dMHz", pllcfg.PLL0_SYSCLK2);
     lv_table_set_cell_value(table, 2, 1, str);
 
-    sprintf(str, "%dMHz", pllcfg.PLL1_SYSCLK1);
+    sprintf(str, "%dMT/s", pllcfg.PLL1_SYSCLK1);
     lv_table_set_cell_value(table, 3, 1, str);
 
     sprintf(str, "%s", BootModeStr[BootMode]);

@@ -43,6 +43,8 @@ uint8_t roate = LV_DISP_ROT_90;
 /****************************************************************************/
 extern void CalculatorWin();
 extern void SystemInfoWin();
+extern void LANWin();
+extern void WLANWin();
 
 /****************************************************************************/
 /*                                                                          */
@@ -77,6 +79,26 @@ static void systeminfo_imgbtnEvent(lv_event_t *e)
     if(event == LV_EVENT_CLICKED)
     {
         SystemInfoWin();
+    }
+}
+
+static void LAN_imgbtnEvent(lv_event_t *e)
+{
+    lv_event_code_t event = lv_event_get_code(e);
+
+    if(event == LV_EVENT_CLICKED)
+    {
+        LANWin();
+    }
+}
+
+static void WLAN_imgbtnEvent(lv_event_t *e)
+{
+    lv_event_code_t event = lv_event_get_code(e);
+
+    if(event == LV_EVENT_CLICKED)
+    {
+        WLANWin();
     }
 }
 
@@ -182,17 +204,52 @@ void HomePage()
     lv_label_set_recolor(calculator_label, true);
     lv_label_set_text_fmt(calculator_label, "#000000 %s#", CalculatorStr);
 
+    // Õ¯¬Á
+    LV_IMG_DECLARE(imgLAN);
+
+    lv_obj_t *LAN_imgbtn = lv_imgbtn_create(lv_scr_act());
+    lv_obj_set_size(LAN_imgbtn, imgLAN.header.w, imgLAN.header.h);
+    lv_obj_set_pos(LAN_imgbtn, 290, 50);
+    lv_imgbtn_set_src(LAN_imgbtn, LV_IMGBTN_STATE_RELEASED, NULL, &imgLAN, NULL);
+    lv_imgbtn_set_src(LAN_imgbtn, LV_IMGBTN_STATE_PRESSED, NULL, &imgLAN, NULL);
+    lv_obj_add_event_cb(LAN_imgbtn, LAN_imgbtnEvent, LV_EVENT_CLICKED, NULL);
+
+    lv_obj_t *LAN_label;
+    LAN_label = lv_label_create(lv_scr_act());
+    lv_obj_set_style_text_align(LAN_label, LV_TEXT_ALIGN_LEFT, 0);
+    lv_label_set_long_mode(LAN_label, LV_LABEL_LONG_SCROLL);
+    lv_obj_set_width(LAN_label, 230);
+    lv_obj_align_to(LAN_label, LAN_imgbtn, LV_ALIGN_OUT_BOTTOM_LEFT, -8, 10);
+    lv_label_set_recolor(LAN_label, true);
+    lv_label_set_text_fmt(LAN_label, "#000000 %s#", LANStr);
+
+    // WIFI
+    LV_IMG_DECLARE(imgWLAN);
+
+    lv_obj_t *WLAN_imgbtn = lv_imgbtn_create(lv_scr_act());
+    lv_obj_set_size(WLAN_imgbtn, imgWLAN.header.w, imgWLAN.header.h);
+    lv_obj_set_pos(WLAN_imgbtn, 370, 50);
+    lv_imgbtn_set_src(WLAN_imgbtn, LV_IMGBTN_STATE_RELEASED, NULL, &imgWLAN, NULL);
+    lv_imgbtn_set_src(WLAN_imgbtn, LV_IMGBTN_STATE_PRESSED, NULL, &imgWLAN, NULL);
+    lv_obj_add_event_cb(WLAN_imgbtn, WLAN_imgbtnEvent, LV_EVENT_CLICKED, NULL);
+
+    lv_obj_t *WLAN_label;
+    WLAN_label = lv_label_create(lv_scr_act());
+    lv_obj_set_style_text_align(WLAN_label, LV_TEXT_ALIGN_LEFT, 0);
+    lv_label_set_long_mode(WLAN_label, LV_LABEL_LONG_SCROLL);
+    lv_obj_set_width(WLAN_label, 230);
+    lv_obj_align_to(WLAN_label, WLAN_imgbtn, LV_ALIGN_OUT_BOTTOM_LEFT, -8, 10);
+    lv_label_set_recolor(WLAN_label, true);
+    lv_label_set_text_fmt(WLAN_label, "#000000 %s#", WLANStr);
+
+    // ¿∂—¿
+
     // ¥•√˛
 
-
     // Ã∞≥‘…ﬂ
-
-
-    // Õ¯¬Á
 
     // »’¿˙
 
     // …Ë÷√
-
 
 }
