@@ -57,7 +57,7 @@ static void roate_imgbtnEvent(lv_event_t *e)
 
     if(event == LV_EVENT_CLICKED)
     {
-        lv_disp_set_rotation(NULL, roate);
+        lv_disp_set_rotation(lv_scr_act(), roate);
         (roate == 3) ? roate = 0 : roate++;
     }
 }
@@ -102,6 +102,16 @@ static void WLAN_imgbtnEvent(lv_event_t *e)
     }
 }
 
+static void Calendar_imgbtnEvent(lv_event_t *e)
+{
+    lv_event_code_t event = lv_event_get_code(e);
+
+    if(event == LV_EVENT_CLICKED)
+    {
+        WLANWin();
+    }
+}
+
 static void time_label_event_cb(lv_event_t *e)
 {
     // 创建日历
@@ -122,6 +132,39 @@ static void time_label_event_cb(lv_event_t *e)
 /*              页面                                                        */
 /*                                                                          */
 /****************************************************************************/
+// 桌面图标
+typedef struct
+{
+    // 位置坐标
+    unsigned short x;
+    unsigned short y;
+    // 按下状态图标
+    const lv_img_dsc_t *imgPressed;
+    // 释放状态图标
+    const lv_img_dsc_t *imgRelesed;
+    // 图标文字
+    char *text;
+    // 回调函数
+    lv_event_cb_t event_cb;
+} DeskIcon;
+
+LV_IMG_DECLARE(imgSystemInfo);
+LV_IMG_DECLARE(imgRoate);
+LV_IMG_DECLARE(imgCalculator);
+LV_IMG_DECLARE(imgLAN);
+LV_IMG_DECLARE(imgWLAN);
+LV_IMG_DECLARE(imgCalendar);
+
+DeskIcon icon[] =
+{
+    { 50,  50, &imgSystemInfo, &imgSystemInfo, SystemInfoStr,systeminfo_imgbtnEvent},
+    {130,  50, &imgRoate, &imgRoate, RoateStr,roate_imgbtnEvent},
+    {210,  50, &imgCalculator, &imgCalculator, CalculatorStr,calculator_imgbtnEvent},
+    {290,  50, &imgLAN, &imgLAN, LANStr,LAN_imgbtnEvent},
+    {370,  50, &imgWLAN, &imgWLAN, WLANStr,WLAN_imgbtnEvent},
+    {450,  50, &imgCalendar, &imgCalendar, CalendarStr,Calendar_imgbtnEvent}
+};
+
 void HomePage()
 {
     /* LVGL 对象 */
@@ -133,6 +176,7 @@ void HomePage()
 
     // 显示时间
     time_label = lv_label_create(lv_scr_act());                                    // 创建标签
+    lv_obj_set_style_text_font(time_label, &SourceHanSansCN_Normal_16, 0);
     lv_obj_set_style_text_align(time_label, LV_TEXT_ALIGN_LEFT, 0);                // 左对齐
     lv_label_set_long_mode(time_label, LV_LABEL_LONG_SCROLL);                      // 长文本滚动
     lv_obj_set_width(time_label, 230);                                             // 文本宽度
@@ -147,109 +191,27 @@ void HomePage()
     lv_label_set_recolor(temp_label, true);
 
     // 桌面图标
-    // 系统信息
-    LV_IMG_DECLARE(imgSystemInfo);
+    int i;
 
-    lv_obj_t *systeminfo_imgbtn = lv_imgbtn_create(lv_scr_act());
-    lv_obj_set_size(systeminfo_imgbtn, imgSystemInfo.header.w, imgSystemInfo.header.h);
-    lv_obj_set_pos(systeminfo_imgbtn, 50, 50);
-    lv_imgbtn_set_src(systeminfo_imgbtn, LV_IMGBTN_STATE_RELEASED, NULL, &imgSystemInfo, NULL);
-    lv_imgbtn_set_src(systeminfo_imgbtn, LV_IMGBTN_STATE_PRESSED, NULL, &imgSystemInfo, NULL);
-    lv_obj_add_event_cb(systeminfo_imgbtn, systeminfo_imgbtnEvent, LV_EVENT_CLICKED, NULL);
+    lv_obj_t *imgbtn;
+    lv_obj_t *label;
 
-    lv_obj_t *systeminfo_label;
-    systeminfo_label = lv_label_create(lv_scr_act());
-    lv_obj_set_style_text_align(systeminfo_label, LV_TEXT_ALIGN_LEFT, 0);
-    lv_label_set_long_mode(systeminfo_label, LV_LABEL_LONG_SCROLL);
-    lv_obj_set_width(systeminfo_label, 230);
-    lv_obj_align_to(systeminfo_label, systeminfo_imgbtn, LV_ALIGN_OUT_BOTTOM_LEFT, -8, 10);
-    lv_label_set_recolor(systeminfo_label, true);
-    lv_label_set_text_fmt(systeminfo_label, "#000000 %s#", SystemInfoStr);
+    for(i = 0; i < sizeof(icon) / sizeof(DeskIcon); i++)
+    {
+        imgbtn = lv_imgbtn_create(lv_scr_act());
+        lv_obj_set_size(imgbtn, icon[i].imgRelesed->header.w, icon[i].imgRelesed->header.h);
+        lv_obj_set_pos(imgbtn, icon[i].x, icon[i].y);
+        lv_imgbtn_set_src(imgbtn, LV_IMGBTN_STATE_RELEASED, NULL, icon[i].imgRelesed, NULL);
+        lv_imgbtn_set_src(imgbtn, LV_IMGBTN_STATE_PRESSED, NULL, icon[i].imgPressed, NULL);
+        lv_obj_add_event_cb(imgbtn, icon[i].event_cb, LV_EVENT_CLICKED, NULL);
 
-    // 旋转
-    LV_IMG_DECLARE(imgRoate);
-
-    lv_obj_t *roate_imgbtn = lv_imgbtn_create(lv_scr_act());
-    lv_obj_set_size(roate_imgbtn, imgRoate.header.w, imgRoate.header.h);
-    lv_obj_set_pos(roate_imgbtn, 130, 50);
-    lv_imgbtn_set_src(roate_imgbtn, LV_IMGBTN_STATE_RELEASED, NULL, &imgRoate, NULL);
-    lv_imgbtn_set_src(roate_imgbtn, LV_IMGBTN_STATE_PRESSED, NULL, &imgRoate, NULL);
-    lv_obj_add_event_cb(roate_imgbtn, roate_imgbtnEvent, LV_EVENT_CLICKED, NULL);
-
-    lv_obj_t *roate_label;
-    roate_label = lv_label_create(lv_scr_act());
-    lv_obj_set_style_text_align(roate_label, LV_TEXT_ALIGN_LEFT, 0);
-    lv_label_set_long_mode(roate_label, LV_LABEL_LONG_SCROLL);
-    lv_obj_set_width(roate_label, 230);
-    lv_obj_align_to(roate_label, roate_imgbtn, LV_ALIGN_OUT_BOTTOM_LEFT, -8, 10);
-    lv_label_set_recolor(roate_label, true);
-    lv_label_set_text_fmt(roate_label, "#000000 %s#", RoateStr);
-
-    // 计算器
-    LV_IMG_DECLARE(imgCalculator);
-
-    lv_obj_t *calculator_imgbtn = lv_imgbtn_create(lv_scr_act());
-    lv_obj_set_size(calculator_imgbtn, imgCalculator.header.w, imgCalculator.header.h);
-    lv_obj_set_pos(calculator_imgbtn, 210, 50);
-    lv_imgbtn_set_src(calculator_imgbtn, LV_IMGBTN_STATE_RELEASED, NULL, &imgCalculator, NULL);
-    lv_imgbtn_set_src(calculator_imgbtn, LV_IMGBTN_STATE_PRESSED, NULL, &imgCalculator, NULL);
-    lv_obj_add_event_cb(calculator_imgbtn, calculator_imgbtnEvent, LV_EVENT_CLICKED, NULL);
-
-    lv_obj_t *calculator_label;
-    calculator_label = lv_label_create(lv_scr_act());
-    lv_obj_set_style_text_align(calculator_label, LV_TEXT_ALIGN_LEFT, 0);
-    lv_label_set_long_mode(calculator_label, LV_LABEL_LONG_SCROLL);
-    lv_obj_set_width(calculator_label, 230);
-    lv_obj_align_to(calculator_label, calculator_imgbtn, LV_ALIGN_OUT_BOTTOM_LEFT, -2, 10);
-    lv_label_set_recolor(calculator_label, true);
-    lv_label_set_text_fmt(calculator_label, "#000000 %s#", CalculatorStr);
-
-    // 网络
-    LV_IMG_DECLARE(imgLAN);
-
-    lv_obj_t *LAN_imgbtn = lv_imgbtn_create(lv_scr_act());
-    lv_obj_set_size(LAN_imgbtn, imgLAN.header.w, imgLAN.header.h);
-    lv_obj_set_pos(LAN_imgbtn, 290, 50);
-    lv_imgbtn_set_src(LAN_imgbtn, LV_IMGBTN_STATE_RELEASED, NULL, &imgLAN, NULL);
-    lv_imgbtn_set_src(LAN_imgbtn, LV_IMGBTN_STATE_PRESSED, NULL, &imgLAN, NULL);
-    lv_obj_add_event_cb(LAN_imgbtn, LAN_imgbtnEvent, LV_EVENT_CLICKED, NULL);
-
-    lv_obj_t *LAN_label;
-    LAN_label = lv_label_create(lv_scr_act());
-    lv_obj_set_style_text_align(LAN_label, LV_TEXT_ALIGN_LEFT, 0);
-    lv_label_set_long_mode(LAN_label, LV_LABEL_LONG_SCROLL);
-    lv_obj_set_width(LAN_label, 230);
-    lv_obj_align_to(LAN_label, LAN_imgbtn, LV_ALIGN_OUT_BOTTOM_LEFT, -8, 10);
-    lv_label_set_recolor(LAN_label, true);
-    lv_label_set_text_fmt(LAN_label, "#000000 %s#", LANStr);
-
-    // WIFI
-    LV_IMG_DECLARE(imgWLAN);
-
-    lv_obj_t *WLAN_imgbtn = lv_imgbtn_create(lv_scr_act());
-    lv_obj_set_size(WLAN_imgbtn, imgWLAN.header.w, imgWLAN.header.h);
-    lv_obj_set_pos(WLAN_imgbtn, 370, 50);
-    lv_imgbtn_set_src(WLAN_imgbtn, LV_IMGBTN_STATE_RELEASED, NULL, &imgWLAN, NULL);
-    lv_imgbtn_set_src(WLAN_imgbtn, LV_IMGBTN_STATE_PRESSED, NULL, &imgWLAN, NULL);
-    lv_obj_add_event_cb(WLAN_imgbtn, WLAN_imgbtnEvent, LV_EVENT_CLICKED, NULL);
-
-    lv_obj_t *WLAN_label;
-    WLAN_label = lv_label_create(lv_scr_act());
-    lv_obj_set_style_text_align(WLAN_label, LV_TEXT_ALIGN_LEFT, 0);
-    lv_label_set_long_mode(WLAN_label, LV_LABEL_LONG_SCROLL);
-    lv_obj_set_width(WLAN_label, 230);
-    lv_obj_align_to(WLAN_label, WLAN_imgbtn, LV_ALIGN_OUT_BOTTOM_LEFT, -8, 10);
-    lv_label_set_recolor(WLAN_label, true);
-    lv_label_set_text_fmt(WLAN_label, "#000000 %s#", WLANStr);
-
-    // 蓝牙
-
-    // 触摸
-
-    // 贪吃蛇
-
-    // 日历
-
-    // 设置
-
+        label = lv_label_create(lv_scr_act());
+        lv_obj_set_style_text_font(label, &SourceHanSansCN_Normal_16, 0);
+        lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_LEFT, 0);
+        lv_label_set_long_mode(label, LV_LABEL_LONG_SCROLL);
+        lv_obj_set_width(label, 230);
+        lv_obj_align_to(label, imgbtn, LV_ALIGN_OUT_BOTTOM_LEFT, -8, 10);
+        lv_label_set_recolor(label, true);
+        lv_label_set_text_fmt(label, "#000000 %s#", icon[i].text);
+    }
 }

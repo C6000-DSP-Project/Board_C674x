@@ -45,10 +45,11 @@
 
 // 图标文字
 #define RoateStr          "屏幕旋转"
-#define CalculatorStr     "计算器"
+#define CalculatorStr     "  计算器"
 #define SystemInfoStr     "系统信息"
 #define LANStr            "有线网络"
 #define WLANStr           "无线网络"
+#define CalendarStr       "    日历"
 
 // 系统信息
 #define DSPTypeStr        "C6748/OMAP-L138"
