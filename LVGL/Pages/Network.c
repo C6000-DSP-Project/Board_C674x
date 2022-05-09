@@ -22,15 +22,20 @@
  */
 #include <App.h>
 
-#include "../zh-cn.h"  // 汉语文本字符串
+#include "zh-cn.h"  // 汉语文本字符串
+
+/****************************************************************************/
+/*                                                                          */
+/*              宏定义                                                      */
+/*                                                                          */
+/****************************************************************************/
+#define WinHeaderHeight     40
 
 /****************************************************************************/
 /*                                                                          */
 /*              全局变量                                                    */
 /*                                                                          */
 /****************************************************************************/
-static lv_obj_t *bottom_bg;
-
 // 窗口
 static lv_obj_t *win;
 
@@ -75,24 +80,24 @@ static void taEvent(lv_event_t *e)
         if(lv_indev_get_type(lv_indev_get_act()) != LV_INDEV_TYPE_KEYPAD)
         {
             lv_keyboard_set_textarea(kb, ta);
-            lv_obj_set_style_max_height(kb, LV_HOR_RES * 2 / 3, 0);
-            lv_obj_update_layout(bottom_bg);
-            lv_obj_set_height(bottom_bg, LV_VER_RES - lv_obj_get_height(kb));
+            lv_obj_set_style_max_height(kb, LV_HOR_RES, 0);
+            lv_obj_update_layout(win);
+            lv_obj_set_height(win, LV_VER_RES - lv_obj_get_height(kb));
             lv_obj_clear_flag(kb, LV_OBJ_FLAG_HIDDEN);
-            lv_obj_scroll_to_view_recursive(ta, LV_ANIM_OFF);
+            lv_obj_scroll_to_view_recursive(ta, LV_ANIM_ON);
         }
     }
     // 判断事件类型(当焦点不在键盘上时)
     else if(code == LV_EVENT_DEFOCUSED)
     {
         lv_keyboard_set_textarea(kb, NULL);
-        lv_obj_set_height(bottom_bg, LV_VER_RES);
+        lv_obj_set_height(win, LV_VER_RES);
         lv_obj_add_flag(kb, LV_OBJ_FLAG_HIDDEN);
     }
     // 判断事件类型(当键盘点击确定或取消键)
     else if(code == LV_EVENT_READY || code == LV_EVENT_CANCEL)
     {
-        lv_obj_set_height(bottom_bg, LV_VER_RES);
+        lv_obj_set_height(win, LV_VER_RES);
         lv_obj_add_flag(kb, LV_OBJ_FLAG_HIDDEN);            // 标志为隐藏对象
         lv_obj_clear_state(e->target, LV_STATE_FOCUSED);    // 删除对象的一种或多种状态 其它状态位将保持不变
         lv_indev_reset(NULL, e->target);                    // 忘记最后一次点击的对象 使其再次成为可关注的对象
@@ -112,7 +117,7 @@ static void NETbtnEvent(lv_event_t *e)
 void LANWin()
 {
     // 窗口
-    win = lv_win_create(lv_scr_act(), 40);
+    win = lv_win_create(lv_scr_act(), WinHeaderHeight);
 
     lv_obj_t *lable;
     lable = lv_win_add_title(win, LANStr);
@@ -121,14 +126,10 @@ void LANWin()
     btn = lv_win_add_btn(win, LV_SYMBOL_CLOSE, 40);
     lv_obj_add_event_cb(btn, WinEvent, LV_EVENT_CLICKED, NULL);
 
-    // 背景
-    bottom_bg = lv_obj_create(win);
-    lv_obj_set_size(bottom_bg, LV_HOR_RES, LV_VER_RES);
-
     // 标签页
     lv_obj_t *tabview;
-    tabview = lv_tabview_create(bottom_bg, LV_DIR_LEFT, 100);
-    lv_obj_set_size(tabview, LV_HOR_RES, LV_VER_RES);
+    tabview = lv_tabview_create(win, LV_DIR_LEFT, 100);
+    lv_obj_set_size(tabview, LV_HOR_RES, LV_VER_RES - WinHeaderHeight);
 
     // 添加标签
     lv_obj_t *tab1 = lv_tabview_add_tab(tabview, LANCFGStr);
@@ -144,7 +145,7 @@ void LANWin()
     lv_obj_t *cont = lv_obj_create(tab1);
     lv_obj_set_style_grid_column_dsc_array(cont, col_dsc, 0);
     lv_obj_set_style_grid_row_dsc_array(cont, row_dsc, 0);
-    lv_obj_set_size(cont, 500, 400);
+    lv_obj_set_size(cont, 500, 350);
     lv_obj_set_layout(cont, LV_LAYOUT_GRID);
     lv_obj_set_grid_align(cont, LV_GRID_ALIGN_START, LV_GRID_ALIGN_START);
 
@@ -163,8 +164,10 @@ void LANWin()
 
     // IP 地址
     //  创建键盘
-    lv_obj_t *kb = lv_keyboard_create(win);
+    lv_obj_t *kb = lv_keyboard_create(lv_scr_act());
     lv_obj_add_flag(kb, LV_OBJ_FLAG_HIDDEN);
+//    lv_keyboard_set_mode(kb, LV_KEYBOARD_MODE_NUMBER);
+//    lv_obj_set_size(kb, 400, 300);
 
     label = lv_label_create(cont);
     lv_obj_center(label);
@@ -243,7 +246,7 @@ void LANWin()
     label = lv_label_create(tab3);
     lv_label_set_text(label, "None");
 
-    lv_obj_scroll_to_view_recursive(label, LV_ANIM_ON);
+//    lv_obj_scroll_to_view_recursive(label, LV_ANIM_ON);
 }
 
 void WLANWin()

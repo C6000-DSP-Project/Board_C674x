@@ -22,7 +22,7 @@
  */
 #include <App.h>
 
-#include "../zh-cn.h"  // 汉语文本字符串
+#include "zh-cn.h"  // 汉语文本字符串
 
 /****************************************************************************/
 /*                                                                          */
@@ -67,6 +67,7 @@ void SystemInfoWin()
     lv_obj_set_pos(table, 0, 0);
     lv_table_set_col_width(table, 0, 150);
     lv_table_set_col_width(table, 1, 300);
+    lv_obj_invalidate(table);
 
     // 第一列
     lv_table_set_cell_value(table, 0, 0, DSPFreqStr);
