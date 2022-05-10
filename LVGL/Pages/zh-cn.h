@@ -106,4 +106,7 @@
 #define YearStr           "年"
 #define MonthStr          "月"
 
+// 时钟
+#define ClockTitleStr     "时钟"
+
 #endif

@@ -193,6 +193,7 @@ void TouchInit()
     // 硬件中断线程初始化
     HwiInit();
 
+    /*
     // 读取触控芯片信息
     ConsoleWrite("\r\nTouch IC Info\r\n");
     unsigned char val[16];
@@ -212,4 +213,5 @@ void TouchInit()
     ConsoleWrite("Firmware Version: 0x%x\n", (val[5] << 8) | val[4]);
     ConsoleWrite("X/Y Coordinate Resolution: %dx%d\n", (val[7] << 8) | val[6], (val[9] << 8) | val[8]);
     ConsoleWrite("Vendor ID: 0x%x\r\n\r\n", val[10]);
+    */
 }
