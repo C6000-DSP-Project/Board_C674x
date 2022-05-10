@@ -7,12 +7,14 @@
 /****************************************************************************/
 /****************************************************************************/
 /*                                                                          */
-/*    ECAP 捕获                                                             */
+/*    ECAP 辅助 PWM 输出                                                    */
 /*                                                                          */
-/*    2015年05月11日                                                        */
+/*    2022年05月10日                                                        */
 /*                                                                          */
 /****************************************************************************/
 /*
+ *    ECAP 辅助 PWM 输出调整 LCD 亮度
+ *
  *    - 希望缄默(bin wang)
  *    - bin@corekernel.net
  *
@@ -26,12 +28,14 @@
 
 /****************************************************************************/
 /*                                                                          */
-/*              全局变量                                                    */
+/*              宏定义                                                      */
 /*                                                                          */
 /****************************************************************************/
-Semaphore_Handle ECAPSemHandle;
+// 周期计数
+#define Period            22800     // 10KHz
 
-unsigned int ECAPValue;
+// 占空比
+#define DutyCycle         0.5
 
 /****************************************************************************/
 /*                                                                          */
@@ -40,66 +44,34 @@ unsigned int ECAPValue;
 /****************************************************************************/
 static void GPIOBankPinMuxSet()
 {
-	// 作为捕获功能时管脚方向为输入
-	// 作为辅助脉宽调制时管脚方向为输出
-    // ECAP1 / APWM1
-    unsigned int savePinMux = 0;
-
-    savePinMux = (HWREG(SOC_SYSCFG_0_REGS + SYSCFG0_PINMUX(1)) & ~(SYSCFG_PINMUX1_PINMUX1_31_28));
-    HWREG(SOC_SYSCFG_0_REGS + SYSCFG0_PINMUX(1)) = ((SYSCFG_PINMUX1_PINMUX1_31_28_ECAP1 << SYSCFG_PINMUX1_PINMUX1_31_28_SHIFT) | savePinMux);
+    HWREG(SOC_SYSCFG_0_REGS + SYSCFG0_PINMUX(1)) = (HWREG(SOC_SYSCFG_0_REGS + SYSCFG0_PINMUX(1)) & (~(SYSCFG_PINMUX1_PINMUX1_3_0))) |
+                                                    ((SYSCFG_PINMUX1_PINMUX1_3_0_ECAP2 << SYSCFG_PINMUX1_PINMUX1_3_0_SHIFT));
 }
 
 /****************************************************************************/
 /*                                                                          */
-/*              ECAP 配置                                                   */
+/*              ECAP 初始化                                                 */
 /*                                                                          */
 /****************************************************************************/
-static void ECAPSetup(unsigned int baseAddr)
+void ECAPAPWMInit()
 {
-    // 停止计数
-    ECAPCounterControl(baseAddr, ECAP_COUNTER_STOP);
+    // 配置 ECAP 2 为 APWM 模式
+    ECAPOperatingModeSelect(SOC_ECAP_2_REGS, ECAP_APWM_MODE);
 
-    // 设置捕获边缘为 0上升沿  1下降沿
-    ECAPCapeEvtPolarityConfig(baseAddr, 0, 1, 0, 1);
+    // 配置周期及占空比（比较计数器值）
+    ECAPAPWMCaptureConfig(SOC_ECAP_2_REGS, Period * DutyCycle, Period);
 
-    // 捕获时间重置计数器(DELTA MODE)
-    ECAPCaptureEvtCntrRstConfig(baseAddr, 1, 1, 1, 1);
+    // 输出相位配置
+    ECAPAPWMPolarityConfig(SOC_ECAP_2_REGS, ECAP_APWM_ACTIVE_HIGH);
 
-    // 使能捕获事件装载计数值
-    ECAPCaptureLoadingEnable(baseAddr);
+    // 启动比较计数器
+    ECAPCounterControl(SOC_ECAP_2_REGS, ECAP_COUNTER_FREE_RUNNING);
 
-    // 预分频 可以写入值 x = 0~31，则分频系数为2x，写入0是1分频
-    ECAPPrescaleConfig(baseAddr, 0);
+    // 计数值与比较器值相等时产生中断
+    ECAPIntEnable(SOC_ECAP_2_REGS, ECAP_CMPEQ_INT);
 
-    // 禁用同步输入输出信号
-    ECAPSyncInOutSelect(baseAddr, ECAP_SYNC_IN_DISABLE, ECAP_SYNC_OUT_DISABLE);
-
-    // 设置操作模式为捕获模式
-    ECAPOperatingModeSelect(baseAddr, ECAP_CAPTURE_MODE);
-
-    // 初始化 ECAP 为连续方式
-    ECAPContinousModeConfig(baseAddr);
-
-    // 设置计数器的值 100ms 溢出
-    ECAPCounterConfig(baseAddr, 0xffffffff - 22800000);
-
-    // 启动计数器
-    ECAPCounterControl(baseAddr, ECAP_COUNTER_FREE_RUNNING);
-}
-
-/****************************************************************************/
-/*                                                                          */
-/*              ECAP 中断初始化                                             */
-/*                                                                          */
-/****************************************************************************/
-static void ECAPInterruptInit(unsigned int baseAddr)
-{
-	// 使能中断源
-	ECAPIntEnable(baseAddr, ECAP_CNTOVF_INT | ECAP_CEVT1_INT | ECAP_CEVT2_INT | ECAP_CEVT3_INT | ECAP_CEVT4_INT);
-	ECAPIntStatusClear(baseAddr, ECAP_CNTOVF_INT | ECAP_CEVT1_INT | ECAP_CEVT2_INT | ECAP_CEVT3_INT | ECAP_CEVT4_INT);
-
-	// 使能 ECAP 全局中断
-	ECAPGlobalIntEnable(baseAddr);
+    // 使能 ECAP 全局中断
+    ECAPGlobalIntEnable(SOC_ECAP_2_REGS);
 }
 
 /****************************************************************************/
@@ -109,85 +81,19 @@ static void ECAPInterruptInit(unsigned int baseAddr)
 /****************************************************************************/
 Void ECAPHwi(UArg arg)
 {
-    unsigned int intFlag;
+    // 禁用中断
+    ECAPIntDisable(SOC_ECAP_2_REGS, ECAP_CMPEQ_INT);
 
-    intFlag = ECAPIntStatus(SOC_ECAP_2_REGS,ECAP_CNTOVF_INT | ECAP_CEVT1_INT | ECAP_CEVT2_INT |
-                                                ECAP_CEVT3_INT | ECAP_CEVT4_INT);
+    // ECAP 中断状态清除
+    ECAPIntStatusClear(SOC_ECAP_2_REGS, ECAP_CMPEQ_INT);
 
-    ECAPIntStatusClear(SOC_ECAP_2_REGS, intFlag);
-
-    if(intFlag & ECAP_CEVT1_INT)
-    {
-//      ECAPValue = ECAPTimeStampRead(SOC_ECAP_1_REGS, ECAP_CAPTURE_EVENT_1);
-    }
-    if(intFlag & ECAP_CEVT2_INT)
-    {
-        ECAPValue = ECAPTimeStampRead(SOC_ECAP_2_REGS, ECAP_CAPTURE_EVENT_2);
-        ECAPValue = ECAPValue / 228;   //将值转换为微秒us
-        // 发布信号量
-        Semaphore_post(ECAPSemHandle);
-    }
-    if(intFlag & ECAP_CEVT3_INT)
-    {
-//      ECAPValue = ECAPTimeStampRead(SOC_ECAP_1_REGS, ECAP_CAPTURE_EVENT_3);
-    }
-    if(intFlag & ECAP_CEVT4_INT)
-    {
-        ECAPValue = ECAPTimeStampRead(SOC_ECAP_2_REGS, ECAP_CAPTURE_EVENT_4);
-        ECAPValue = ECAPValue/228;   //将值转换为微秒us
-        // 发布信号量
-        Semaphore_post(ECAPSemHandle);
-    }
-    if(intFlag & ECAP_CNTOVF_INT) // 溢出中断
-    {
-        ECAPCounterConfig(SOC_ECAP_2_REGS, 0xffffffff - 22800000);
-    }
-    ECAPIntStatusClear(SOC_ECAP_2_REGS, ECAP_GLOBAL_INT);
+    // 使能中断
+    ECAPIntEnable(SOC_ECAP_2_REGS, ECAP_CMPEQ_INT);
 }
 
 static Void HwiInit()
 {
     EventCombiner_dispatchPlug(SYS_INT_ECAP2, &ECAPHwi, 1, TRUE);
-}
-
-/****************************************************************************/
-/*                                                                          */
-/*              任务线程                                                    */
-/*                                                                          */
-/****************************************************************************/
-Void ECAPTask(UArg a0, UArg a1)
-{
-    while(1)
-    {
-         Semaphore_pend(ECAPSemHandle, BIOS_WAIT_FOREVER);
-
-        if(ECAPValue != 0)
-        {
-            UARTprintf("ECAPValue = %d us\n", ECAPValue);
-            ECAPValue = 0;
-        }
-    }
-}
-
-static Void TaskInit()
-{
-    Task_Params taskParams;
-    Task_Params_init(&taskParams);
-    taskParams.priority = 4;
-    Task_create(ECAPTask, &taskParams, NULL);
-}
-
-/****************************************************************************/
-/*                                                                          */
-/*              信号量                                                      */
-/*                                                                          */
-/****************************************************************************/
-Void SemInit()
-{
-    Semaphore_Params params;
-    Semaphore_Params_init(&params);
-    params.mode = Semaphore_Mode_BINARY;
-    ECAPSemHandle = Semaphore_create(0, &params, NULL);
 }
 
 /****************************************************************************/
@@ -203,18 +109,9 @@ void ECAPInit()
     // GPIO 管脚复用配置
     GPIOBankPinMuxSet();
 
-    // 捕获配置
-    ECAPSetup(SOC_ECAP_2_REGS);
-
-    // ECAP中断初始化
-    ECAPInterruptInit(SOC_ECAP_2_REGS);
+    // ECAP 初始化
+    ECAPAPWMInit();
 
     // 硬件中断线程初始化
     HwiInit();
-
-    // 任务线程初始化
-    TaskInit();
-
-    // 信号量初始化
-    SemInit();
 }

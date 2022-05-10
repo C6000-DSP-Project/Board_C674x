@@ -50,6 +50,13 @@
 #define LANStr            "有线网络"
 #define WLANStr           "无线网络"
 #define CalendarStr       "    日历"
+#define FileStr           "文件管理"
+#define LCDBrightnessStr  "屏幕亮度"
+#define ClockStr          "    时钟"
+#define TouchStr          "触摸测试"
+#define GameStr           "    游戏"
+#define SnakeStr          "  贪吃蛇"
+#define TetrisStr         "俄罗斯方块"
 
 // 系统信息
 #define DSPTypeStr        "C6748/OMAP-L138"

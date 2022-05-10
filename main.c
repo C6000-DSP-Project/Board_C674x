@@ -132,6 +132,9 @@ Void HardwareInit()
     // LCD
     LCDInit();
 
+    // LCD 屏幕亮度
+    ECAPInit();
+
     // 触摸屏
     TouchInit();
 
@@ -141,7 +144,7 @@ Void HardwareInit()
     lv_port_indev_init();
 
     // [PRU 核心] LED 点阵模块
-//  LEDMatrixInit();
+    LEDMatrixInit();
 }
 
 /****************************************************************************/

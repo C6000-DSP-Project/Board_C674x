@@ -68,6 +68,8 @@
 									<listOptionValue builtIn="false" value="../Include/StarterWare/Drivers/hw"/>
 									<listOptionValue builtIn="false" value="../Include/StarterWare/Drivers/c674x/c6748"/>
 									<listOptionValue builtIn="false" value="../Include/Loader"/>
+									<listOptionValue builtIn="false" value="../Library/Driver/BLKMedia/Include"/>
+									<listOptionValue builtIn="false" value="../Library/Driver/MMCSD/Include"/>
 								</option>
 								<option id="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.GCC.2102391822" name="Enable support for GCC extensions (DEPRECATED) (--gcc)" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.GCC" value="true" valueType="boolean"/>
 								<option id="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.DIAG_WRAP.2097116861" name="Wrap diagnostic messages (--diag_wrap)" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.DIAG_WRAP" value="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.DIAG_WRAP.off" valueType="enumerated"/>
@@ -98,6 +100,13 @@
 									<listOptionValue builtIn="false" value="libc.a"/>
 									<listOptionValue builtIn="false" value="../Library/StarterWare/Drivers/drivers.lib"/>
 									<listOptionValue builtIn="false" value="../Library/Loader/Loader.lib"/>
+									<listOptionValue builtIn="false" value="../Library/Driver/PSC/Library/Debug/bios_psp_psc.ae674"/>
+									<listOptionValue builtIn="false" value="../Library/Driver/EDMA3/Library/Debug/edma3_lld_drv.ae674"/>
+									<listOptionValue builtIn="false" value="../Library/Driver/EDMA3/Library/Debug/edma3_lld_rm.ae674"/>
+									<listOptionValue builtIn="false" value="../Library/Driver/EDMA3/Library/Debug/edma3_lld_drv_sample.ae674"/>
+									<listOptionValue builtIn="false" value="../Library/Driver/BLKMedia/Library/Debug/bios_psp_blkmedia.ae674"/>
+									<listOptionValue builtIn="false" value="../Library/Driver/MMCSD/Library/Debug/bios_psp_mmcsd.ae674"/>
+									<listOptionValue builtIn="false" value="../Library/Driver/GPIO/Library/Debug/bios_psp_gpio.ae674"/>
 								</option>
 								<option id="com.ti.ccstudio.buildDefinitions.C6000_8.3.linkerID.SEARCH_PATH.1180026382" name="Add &lt;dir&gt; to library search path (--search_path, -i)" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.linkerID.SEARCH_PATH" valueType="libPaths">
 									<listOptionValue builtIn="false" value="${COM_TI_UIA_LIBRARY_PATH}"/>
@@ -148,7 +157,7 @@
 							<targetPlatform id="com.ti.ccstudio.buildDefinitions.C6000_8.3.exe.targetPlatformDebug" name="Platform" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.exe.targetPlatformDebug"/>
 							<tool id="com.ti.ccstudio.buildDefinitions.C6000_8.3.exe.compilerDebug.834956342" name="C6000 Compiler" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.exe.compilerDebug.62125151">
 								<option id="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.C_DIALECT.640175435" name="C Dialect" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.C_DIALECT" value="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.C_DIALECT.C99" valueType="enumerated"/>
-								<option id="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.DIAG_SUPPRESS.1920974434" name="Suppress diagnostic &lt;id&gt; (--diag_suppress, -pds)" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.DIAG_SUPPRESS" valueType="stringList"/>
+								<option id="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.DIAG_SUPPRESS.1920974434" name="Suppress diagnostic &lt;id&gt; (--diag_suppress, -pds)" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.DIAG_SUPPRESS"/>
 								<option id="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.NO_WARNINGS.971723112" name="Suppress warnings (--no_warnings, -pdw)" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.NO_WARNINGS" value="true" valueType="boolean"/>
 								<option id="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.DEFINE.1881701024" name="Pre-define NAME (--define, -D)" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.3.compilerID.DEFINE" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="${COM_TI_UIA_SYMBOLS}"/>
