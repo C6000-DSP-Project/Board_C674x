@@ -119,8 +119,8 @@ void LANWin()
     // 窗口
     win = lv_win_create(lv_scr_act(), WinHeaderHeight);
 
-    lv_obj_t *lable;
-    lable = lv_win_add_title(win, LANStr);
+    lv_obj_t *label;
+    label = lv_win_add_title(win, LANStr);
 
     lv_obj_t *btn;
     btn = lv_win_add_btn(win, LV_SYMBOL_CLOSE, 40);
@@ -152,7 +152,7 @@ void LANWin()
     // 网格布局内容
     // 标签页 1
     // DHCP 模式
-    lv_obj_t *label = lv_label_create(cont);
+    label = lv_label_create(cont);
     lv_obj_center(label);
     lv_label_set_text(label, DHCPStr);
     lv_obj_set_grid_cell(label, LV_GRID_ALIGN_STRETCH, 0, 1, LV_GRID_ALIGN_STRETCH, 0, 1);

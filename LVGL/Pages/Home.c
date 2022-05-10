@@ -46,6 +46,8 @@ extern void SystemInfoWin();
 extern void LANWin();
 extern void WLANWin();
 extern void LCDBrightnessWin();
+extern void ClockWin();
+extern void CalendarWin();
 
 /****************************************************************************/
 /*                                                                          */
@@ -103,16 +105,6 @@ static void WLANEvent(lv_event_t *e)
     }
 }
 
-static void CalendarEvent(lv_event_t *e)
-{
-    lv_event_code_t event = lv_event_get_code(e);
-
-    if(event == LV_EVENT_CLICKED)
-    {
-        WLANWin();
-    }
-}
-
 static void FileEvent(lv_event_t *e)
 {
     lv_event_code_t event = lv_event_get_code(e);
@@ -133,19 +125,24 @@ static void LCDBrightnessEvent(lv_event_t *e)
     }
 }
 
-static void time_label_event_cb(lv_event_t *e)
+static void ClockEvent(lv_event_t *e)
 {
-    // 创建日历
-    lv_obj_t *calendar = lv_calendar_create(lv_scr_act());
-    lv_obj_set_size(calendar, 300, 300);                                           // 大小
-    lv_obj_align(calendar, LV_ALIGN_CENTER, 0, 0);                                 // 位置
+    lv_event_code_t event = lv_event_get_code(e);
 
-    // 设置日期和显示日期
-    lv_calendar_set_today_date(calendar, RTCTime.tm_year + 1920, RTCTime.tm_mon, RTCTime.tm_mday);
-    lv_calendar_set_showed_date(calendar, RTCTime.tm_year + 1920, RTCTime.tm_mon);
+    if(event == LV_EVENT_CLICKED)
+    {
+        ClockWin();
+    }
+}
 
-    // 删除日历
-//    lv_obj_del(calendar);
+static void CalendarEvent(lv_event_t *e)
+{
+    lv_event_code_t event = lv_event_get_code(e);
+
+    if(event == LV_EVENT_CLICKED)
+    {
+        CalendarWin();
+    }
 }
 
 /****************************************************************************/
@@ -192,7 +189,7 @@ DeskIcon icon[] =
     {560,  100, &imgWLAN, &imgWLAN, WLANStr, WLANEvent},
     {680,  100, &imgFile, &imgFile, FileStr, FileEvent},
     { 80,  220, &imgCalendar, &imgCalendar, CalendarStr, CalendarEvent},
-    {200,  220, &imgClock, &imgClock, ClockStr, FileEvent},
+    {200,  220, &imgClock, &imgClock, ClockStr, ClockEvent},
     {320,  220, &imgBrightness, &imgBrightness, LCDBrightnessStr, LCDBrightnessEvent},
     {440,  220, &imgTouch, &imgTouch, TouchStr, FileEvent},
     { 80,  340, &imgGame, &imgGame, GameStr, FileEvent},

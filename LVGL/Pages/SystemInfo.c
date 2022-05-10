@@ -54,8 +54,8 @@ void SystemInfoWin()
 {
     win = lv_win_create(lv_scr_act(), 40);
 
-    lv_obj_t *lable;
-    lable = lv_win_add_title(win, SystemInfoStr);
+    lv_obj_t *label;
+    label = lv_win_add_title(win, SystemInfoStr);
 
     lv_obj_t *btn;
     btn = lv_win_add_btn(win, LV_SYMBOL_CLOSE, 40);

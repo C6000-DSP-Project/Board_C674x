@@ -53,15 +53,15 @@ void CalculatorWin()
 {
     win = lv_win_create(lv_scr_act(), 40);
 
-    lv_obj_t *lable;
-    lable = lv_win_add_title(win, CalculatorStr);
+    lv_obj_t *label;
+    label = lv_win_add_title(win, CalculatorStr);
 
     lv_obj_t *btn;
     btn = lv_win_add_btn(win, LV_SYMBOL_CLOSE, 40);
     lv_obj_add_event_cb(btn, WinEvent, LV_EVENT_CLICKED, NULL);
 
     lv_obj_t *cont = lv_win_get_content(win);
-    lv_obj_t *label = lv_label_create(cont);
+    label = lv_label_create(cont);
     lv_label_set_text(label, "This is\n"
                              "a pretty\n"
                              "long text\n"

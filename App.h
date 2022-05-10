@@ -80,7 +80,6 @@
 #include "Periph/LCD/LCD.h"
 
 // LVGL м╪пн©Б
-#include "LVGL/lvgl.h"
 #include "LVGL/porting/lv_port_disp_c674x.h"
 #include "LVGL/porting/lv_port_indev_c674x.h"
 

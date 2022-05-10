@@ -27,6 +27,20 @@
 #ifndef ZH_CN_H_
 #define ZH_CN_H_
 
+// 月
+#define JanuaryStr        "一月"
+#define FebruaryStr       "二月"
+#define MarchStr          "三月"
+#define AprilStr          "四月"
+#define MayStr            "五月"
+#define JuneStr           "六月"
+#define JulyStr           "七月"
+#define AugustStr         "八月"
+#define SeptemberStr      "九月"
+#define OctoberStr        "十月"
+#define NovemberStr       "十一月"
+#define DecemberStr       "十二月"
+
 // 星期
 #define SundayStr         "星期日"
 #define MondayStr         "星期一"
@@ -85,5 +99,11 @@
 #define LANTELNETStr      "Telnet 服务器"
 #define DHCPStr           "DHCP"
 #define NETInitStr        "网络初始化"
+
+// 日历
+#define CalendarTitleStr  "日历"
+#define TodayStr          "今天"
+#define YearStr           "年"
+#define MonthStr          "月"
 
 #endif
