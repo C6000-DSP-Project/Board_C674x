@@ -199,7 +199,9 @@ void LCDInit();
 void TouchInit();
 
 Void ECAPInit();
-Void PWMInit(unsigned int pwm_clk, unsigned short duty_ratio);
+
+Void EHRPWMInit();
+void PWMSet(unsigned int pwm_clk, unsigned short duty_ratio);
 
 Void SPIFlashInit();
 Void SPIFlashTest(Void);

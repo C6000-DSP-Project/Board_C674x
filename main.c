@@ -132,7 +132,10 @@ Void HardwareInit()
     // LCD
     LCDInit();
 
-    // LCD ÆÁÄ»ÁÁ¶È
+    // EHRPWM
+    EHRPWMInit();
+
+    // ECAP(LCD ÆÁÄ»ÁÁ¶È)
     ECAPInit();
 
     // ´¥ÃþÆÁ
@@ -158,7 +161,7 @@ Int main()
     HardwareInit();
 
     // Êä³öÌáÊ¾
-    ConsoleWrite("CoreKernel EVM-CKL138/6748PKT/EDA Application...\r\n");
+    ConsoleWrite("CoreKernel EVM-CKL138PKT/CK6748PKT Application...\r\n");
     ConsoleWrite("Build on %s - %s CGT Version %d\r\n", __DATE__, __TIME__, __TI_COMPILER_VERSION__);
     ConsoleWrite("CoreKernel > ");
 

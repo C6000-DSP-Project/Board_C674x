@@ -48,6 +48,7 @@ extern void WLANWin();
 extern void LCDBrightnessWin();
 extern void ClockWin();
 extern void CalendarWin();
+extern void FanWin();
 
 /****************************************************************************/
 /*                                                                          */
@@ -145,6 +146,16 @@ static void CalendarEvent(lv_event_t *e)
     }
 }
 
+static void FanEvent(lv_event_t *e)
+{
+    lv_event_code_t event = lv_event_get_code(e);
+
+    if(event == LV_EVENT_CLICKED)
+    {
+        FanWin();
+    }
+}
+
 /****************************************************************************/
 /*                                                                          */
 /*              Ò³Ãæ                                                        */
@@ -179,6 +190,7 @@ LV_IMG_DECLARE(imgTouch);
 LV_IMG_DECLARE(imgGame);
 LV_IMG_DECLARE(imgClock);
 LV_IMG_DECLARE(imgBrightness);
+LV_IMG_DECLARE(imgFan);
 
 DeskIcon icon[] =
 {
@@ -192,6 +204,7 @@ DeskIcon icon[] =
     {200,  220, &imgClock, &imgClock, ClockStr, ClockEvent},
     {320,  220, &imgBrightness, &imgBrightness, LCDBrightnessStr, LCDBrightnessEvent},
     {440,  220, &imgTouch, &imgTouch, TouchStr, FileEvent},
+    {560,  220, &imgFan, &imgFan, FanStr, FanEvent},
     { 80,  340, &imgGame, &imgGame, GameStr, FileEvent},
     {200,  340, &imgSnake, &imgSnake, SnakeStr, FileEvent},
     {320,  340, &imgTetris, &imgTetris, TetrisStr, FileEvent},

@@ -71,6 +71,7 @@
 #define GameStr           "    游戏"
 #define SnakeStr          "  贪吃蛇"
 #define TetrisStr         "俄罗斯方块"
+#define FanStr            "    风扇"
 
 // 系统信息
 #define DSPTypeStr        "C6748/OMAP-L138"
@@ -108,5 +109,10 @@
 
 // 时钟
 #define ClockTitleStr     "时钟"
+
+// 风扇
+#define FanTitleStr       "风扇"
+#define FREQStr           "使用时请注意安全\n频率"
+#define DutyStr           "占空比"
 
 #endif

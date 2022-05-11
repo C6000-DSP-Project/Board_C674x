@@ -127,6 +127,7 @@ void ClockWin()
     lv_obj_set_width(timelabel, 200);                                                         // 文本宽度
     lv_obj_align(timelabel, LV_ALIGN_TOP_RIGHT, -75, 170);                                    // 位置
     lv_label_set_recolor(timelabel, true);                                                    // 允许修改文本颜色
+    lv_label_set_text_fmt(timelabel, "#00BFFF %02d:%02d:%02d", RTCTime.tm_hour, RTCTime.tm_min, RTCTime.tm_sec);
 
     // 创建定时器
     timer = lv_timer_create(UpdateTime, 1000, NULL);

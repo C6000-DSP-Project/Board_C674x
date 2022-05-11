@@ -138,17 +138,11 @@ int Cmd_EHRPWM(int argc, char *argv[])
 
     	sscanf(argv[2], "%d", &pwm_clk);
     	sscanf(argv[3], "%d", &duty_ratio);
-    	PWMInit(pwm_clk, duty_ratio);
+    	PWMSet(pwm_clk, duty_ratio);
     }
     else if(!strcmp(argv[1], "off"))
     {
-        PWMInit(0, 0);
-//
-//    	// 打开触摸屏中断
-//    	EventCombiner_enableEvent(SYS_INT_GPIO_B2INT);
-//    	// 还原引脚为 spi片选
-//		// SP1 片选管脚复用配置
-//    	SPI1CSPinMuxSet(1);
+        PWMSet(0, 0);
     }
 
     return 0;
@@ -374,7 +368,7 @@ tCmdLineEntry g_sCmdTable[] =
 
     {"ddr2",         Cmd_DDR2,       "\t\t - DDR2 Test  [ddr2]"},
     {"ov2640",       Cmd_OV2640,     "\t\t - VPIF OV2640 Test  [tl2640+on/off]"},
-    {"ehrpwm",       Cmd_EHRPWM,     "\t\t - EHRPWM Test  [ehrpwm+on+'freq(Hz)'+'duty ratio(%)'] [ehrpwm+off]"},
+    {"pwm",          Cmd_EHRPWM,     "\t\t - EHRPWM Test  [ehrpwm+on+'freq(Hz)'+'duty ratio(%)'] [ehrpwm+off]"},
     {"sata",         Cmd_SATA,       "\t\t - SATA Test  [sata]"},
 
     {"pru",          Cmd_PRULoad,    "\t\t - Load PRU program.[pruled]"},
