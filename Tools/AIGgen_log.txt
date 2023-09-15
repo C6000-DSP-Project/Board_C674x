@@ -1,0 +1,96 @@
+***Loaded configuration from file D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\C6748AISgen_456M_SPI_Config.cfg
+***Saved configuration to file D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\C6748AISgen_456M_SPI_Config.cfg
+Begining the AIS file generation.
+AIS file being generated for bootmode: NONE.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\Board_C674x\Debug\Board_C674x.out.
+AIS file generation was successful.
+***Wrote 4897400 bytes to file D:\File\CoreKernel\DSP\C6748\Board_C674x\Debug\Board_C674x.ais
+***Saved configuration to file D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\C6748AISgen_456M_SPI_Config.cfg
+Begining the AIS file generation.
+AIS file being generated for bootmode: NONE.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\Board_C674x\Debug\Board_C674x.out.
+AIS file generation was successful.
+***Wrote 4897400 bytes to file D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\Board_C674x.ais
+Begining the AIS file generation.
+AIS file being generated for bootmode: NONE.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\OMAPL138_DSPBOOT.out.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\Board_C674x\Debug\Board_C674x.out.
+AIS file generation was successful.
+***Wrote 4899280 bytes to file D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\Board_C674x.ais
+Begining the AIS file generation.
+AIS file being generated for bootmode: NONE.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\OMAPL138_DSPBOOT.out.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\Board_C674x\Debug\Board_C674x.out.
+AIS file generation was successful.
+***Wrote 4899280 bytes to file D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\Board_C674x.ais
+Begining the AIS file generation.
+AIS file being generated for bootmode: NONE.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\OMAPL138_DSPBOOT.out.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\Board_C674x\Debug\Board_C674x.out.
+AIS file generation was successful.
+***Wrote 4899280 bytes to file D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\Board_C674x_OMAP-L138.ais
+***Saved configuration to file D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\OMAP-L138AISgen_456M_SPI_Config.cfg
+Begining the AIS file generation.
+AIS file being generated for bootmode: NONE.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\OMAP-L138_ARMBOOT.out.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\Board_C674x\Debug\Board_C674x.out.
+AIS file generation was successful.
+***Wrote 4899384 bytes to file D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\Board_C674x_OMAP-L138.ais
+***Saved configuration to file D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\OMAP-L138AISgen_456M_SPI_Config.cfg
+Begining the AIS file generation.
+AIS file being generated for bootmode: NONE.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\OMAP-L138_ARMBOOT.out.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\Board_C674x\Debug\Board_C674x.out.
+AIS file generation was successful.
+***Wrote 4899384 bytes to file D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\Board_C674x_OMAP-L138.ais
+Begining the AIS file generation.
+AIS file being generated for bootmode: NONE.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\OMAP-L138_ARMBOOT.out.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\Board_C674x\Debug\Board_C674x.out.
+AIS file generation was successful.
+***Wrote 4899372 bytes to file D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\Board_C674x_OMAP-L138.ais
+***Saved configuration to file D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\OMAP-L138AISgen_456M_SPI_Config.cfg
+Begining the AIS file generation.
+AIS file being generated for bootmode: NONE.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\OMAP-L138_ARMBOOT.out.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\Board_C674x\Debug\Board_C674x.out.
+AIS file generation was successful.
+***Wrote 4899372 bytes to file D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\Board_C674x_OMAP-L138.ais
+Begining the AIS file generation.
+AIS file being generated for bootmode: NONE.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\OMAP-L138_ARMBOOT.out.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\Board_C674x\Debug\Board_C674x.out.
+AIS file generation was successful.
+***Wrote 4899408 bytes to file D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\Board_C674x_OMAP-L138.ais
+Begining the AIS file generation.
+AIS file being generated for bootmode: NONE.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\OMAP-L138_ARMBOOT.out.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\Board_C674x\Debug\Board_C674x.out.
+AIS file generation was successful.
+***Wrote 4917024 bytes to file D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\Board_C674x_OMAP-L138.ais
+***Loaded configuration from file D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\C6748AISgen_456M_SPI_Config.cfg
+Begining the AIS file generation.
+AIS file being generated for bootmode: NONE.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\NonOS\LEDNixie_IO\Debug\LEDNixie_IO.out.
+AIS file generation was successful.
+***Wrote 4464 bytes to file D:\File\CoreKernel\DSP\C6748\NonOS\LEDNixie_IO\Debug\LEDNixie_IO.ais
+***Loaded configuration from file D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\OMAP-L138AISgen_456M_SPI_Config.cfg
+***Loaded configuration from file D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\OMAP-L138AISgen_456M_SPI_Config.cfg
+Begining the AIS file generation.
+AIS file being generated for bootmode: NONE.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\OMAP-L138_ARMBOOT.out.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\Board_C674x\Debug\Board_C674x.out.
+AIS file generation was successful.
+***Wrote 4930528 bytes to file D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\Board_C674x_OMAP-L138.ais
+Begining the AIS file generation.
+AIS file being generated for bootmode: NONE.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\OMAP-L138_ARMBOOT.out.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\Board_C674x\Debug\Board_C674x.out.
+AIS file generation was successful.
+***Wrote 5095968 bytes to file D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\Board_C674x_OMAP-L138.ais
+Begining the AIS file generation.
+AIS file being generated for bootmode: NONE.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\OMAP-L138_ARMBOOT.out.
+Parsing the input object file, D:\File\CoreKernel\DSP\C6748\Board_C674x\Debug\Board_C674x.out.
+AIS file generation was successful.
+***Wrote 5633584 bytes to file D:\File\CoreKernel\DSP\C6748\Board_C674x\Tools\Board_C674x_OMAP-L138.ais

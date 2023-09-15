@@ -68,7 +68,7 @@
 #define LCDBrightnessStr  "屏幕亮度"
 #define ClockStr          "    时钟"
 #define TouchStr          "    画板"
-#define GameStr           "    游戏"
+#define GameStr           "游戏手柄"
 #define SnakeStr          "  贪吃蛇"
 #define TetrisStr         "俄罗斯方块"
 #define FanStr            "    风扇"
